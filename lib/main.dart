@@ -5,5 +5,4 @@ void main() async{
 
   Actividad1App actividad1app = Actividad1App();
   runApp(actividad1app);
-
 }
