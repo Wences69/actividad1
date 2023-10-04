@@ -1,5 +1,6 @@
 import 'package:actividad1/Custom/CustomButton.dart';
 import 'package:actividad1/Custom/CustomTextFormField.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Custom/CustomAppBar.dart';
 
@@ -31,7 +32,24 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  void onClickAceptar(){}
+  void onClickAceptar() async{
+
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: tecUsername.text,
+        password: tecPassword.text,
+      );
+      Navigator.of(_context).popAndPushNamed("/homeview");
+
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+
+  }
 
   void onClickRegistrar(){
     Navigator.of(_context).pushNamed("/registerview");
