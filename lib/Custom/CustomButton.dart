@@ -19,9 +19,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: () {
-        // Acción cuando se presione el botón
-      },
+      onPressed: onPressed ,
       child: Text(sNombre,
         style: TextStyle(
           color: cColorTexto,
