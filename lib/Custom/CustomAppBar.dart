@@ -7,12 +7,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color cColorSombra;
   final bool boolCentrarTitulo = true;
 
-  CustomAppBar({
+  CustomAppBar({Key? key,
     required this.sTitulo,
     this.cColorFondo = Colors.blue,
     this.cColorTexto = Colors.white,
     this.cColorSombra = Colors.deepOrange,
-  });
+  }) : super(key: key);
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);

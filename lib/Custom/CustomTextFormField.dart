@@ -9,8 +9,8 @@ class CustomTextFormField extends StatelessWidget{
   double dPaddingV;
 
   CustomTextFormField({Key? key,
-    this.sLabel="",
     required this.tecController,
+    this.sLabel="",
     this.blIsPassword=false,
     this.dPaddingH=60,
     this.dPaddingV=15
@@ -29,7 +29,7 @@ class CustomTextFormField extends StatelessWidget{
               autocorrect: !blIsPassword,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20)),
+                    borderRadius: BorderRadius.circular(8)),
                 labelText: sLabel,
               )),
         ),
