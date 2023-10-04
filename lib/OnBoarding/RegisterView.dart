@@ -35,5 +35,7 @@ class RegisterView extends StatelessWidget {
 
   void onClickAceptar(){}
 
-  void onClickCancelar(){}
+  void onClickCancelar(){
+    Navigator.of(_context).pushNamed("/loginview");
+  }
 }
