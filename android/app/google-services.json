@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "584409268857",
+    "project_id": "actividad1-33cfa",
+    "storage_bucket": "actividad1-33cfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584409268857:android:9b22ef3ef06624f02bcaa8",
+        "android_client_info": {
+          "package_name": "rueda.oscar.actividad1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfhy_Vm7YytlWdCJmORcKgstUzBLPReY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
