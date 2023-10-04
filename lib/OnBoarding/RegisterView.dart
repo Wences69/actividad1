@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Custom/CustomAppBar.dart';
 import '../Custom/CustomButton.dart';
@@ -20,7 +21,7 @@ class RegisterView extends StatelessWidget {
           children: [
             CustomTextFormField(tecController: tecUsername, sLabel: 'Escribe tu usuario'),
             CustomTextFormField(tecController: tecPassword, sLabel: 'Escribe tu contraseña', blIsPassword: true),
-            CustomTextFormField(tecController: tecPassword, sLabel: 'Vuelva a escribir su contraseña', blIsPassword: true),
+            CustomTextFormField(tecController: tecRepass, sLabel: 'Vuelva a escribir su contraseña', blIsPassword: true),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -33,7 +34,30 @@ class RegisterView extends StatelessWidget {
     );
   }
 
-  void onClickAceptar(){}
+  void onClickAceptar() async {
+    //print("DEBUG>>>> "+usernameController.text);
+    if(tecPassword.text==tecRepass.text) {
+      try {
+
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: tecUsername.text,
+          password: tecPassword.text,
+        );
+        Navigator.of(_context).pushNamed("/loginview");
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
+    else{
+      print('Las contraseñas no coinciden');
+    }
+  }
 
   void onClickCancelar(){
     Navigator.of(_context).pushNamed("/loginview");
