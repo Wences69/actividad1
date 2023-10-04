@@ -11,7 +11,7 @@ class CustomButton extends StatelessWidget {
     required this.sNombre,
     this.cColorTexto = Colors.white,
     this.dFontSize = 16,
-    this.cColorFondo = Colors.blue,
+    this.cColorFondo = Colors.cyan,
     required this.onPressed,
   }) : super(key: key);
 
@@ -19,7 +19,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: onPressed ,
+      onPressed: onPressed,
       child: Text(sNombre,
         style: TextStyle(
           color: cColorTexto,
@@ -28,7 +28,7 @@ class CustomButton extends StatelessWidget {
         ),
       ),
       style: TextButton.styleFrom(
-        backgroundColor: cColorFondo,
+        backgroundColor: Colors.blueAccent,
         padding: EdgeInsets.all(10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),

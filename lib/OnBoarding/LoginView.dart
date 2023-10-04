@@ -14,7 +14,8 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     this._context=context;
     return Scaffold(
-      appBar: CustomAppBar(sTitulo: 'Bienvendio al login'),
+      backgroundColor: Colors.blueGrey.shade50,
+      appBar: CustomAppBar(sTitulo: 'Bienvenido al login'),
       body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
         children: [

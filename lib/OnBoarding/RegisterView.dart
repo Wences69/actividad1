@@ -15,6 +15,7 @@ class RegisterView extends StatelessWidget {
   Widget build(BuildContext context) {
     this._context=context;
     return Scaffold(
+      backgroundColor: Colors.blueGrey.shade50,
       appBar: CustomAppBar(sTitulo: 'Bienvendio al registro'),
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,

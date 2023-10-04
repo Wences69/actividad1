@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String sTitulo;
-  final Color cColorFondo;
+  final MaterialColor cColorFondo;
   final Color cColorTexto;
   final Color cColorSombra;
   final bool boolCentrarTitulo = true;
@@ -20,7 +20,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: cColorFondo,
+      backgroundColor: Colors.blueAccent.shade100,
       shadowColor: cColorSombra,
       title: Text(sTitulo),
       titleTextStyle: TextStyle(color: cColorTexto, fontSize: 22),
