@@ -33,5 +33,7 @@ class LoginView extends StatelessWidget {
 
   void onClickAceptar(){}
 
-  void onClickRegistrar(){}
+  void onClickRegistrar(){
+    Navigator.of(_context).pushNamed("/registerview");
+  }
 }

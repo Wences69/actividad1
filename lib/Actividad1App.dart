@@ -1,3 +1,4 @@
+import 'package:actividad1/OnBoarding/RegisterView.dart';
 import 'package:flutter/material.dart';
 
 import 'OnBoarding/LoginView.dart';
@@ -6,12 +7,12 @@ class Actividad1App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MaterialApp materialApp=MaterialApp(title: "Actividad 1",
+    MaterialApp materialApp=MaterialApp(title: 'Actividad 1',
     routes: {
-      "/loginview":(context) => LoginView()
-
+      '/loginview':(context) => LoginView(),
+      '/registerview':(context) => RegisterView()
     },
-    initialRoute: "/loginview",
+    initialRoute: '/loginview',
     );
 
     return materialApp;
