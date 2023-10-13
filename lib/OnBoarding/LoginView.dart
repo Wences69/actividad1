@@ -49,9 +49,7 @@ class LoginView extends StatelessWidget {
         print('Wrong password provided for that user.');
       }
     }
-
   }
-
   void onClickRegistrar(){
     Navigator.of(_context).pushNamed("/registerview");
   }
