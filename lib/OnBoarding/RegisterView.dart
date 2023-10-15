@@ -36,7 +36,6 @@ class RegisterView extends StatelessWidget {
   }
 
   void onClickAceptar() async {
-    //print("DEBUG>>>> "+usernameController.text);
     if(tecPassword.text==tecRepass.text) {
       try {
 
@@ -44,7 +43,7 @@ class RegisterView extends StatelessWidget {
           email: tecUsername.text,
           password: tecPassword.text,
         );
-        Navigator.of(_context).pushNamed("/loginview");
+        Navigator.of(_context).popAndPushNamed("/loginview");
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           print('The password provided is too weak.');
@@ -61,6 +60,6 @@ class RegisterView extends StatelessWidget {
   }
 
   void onClickCancelar(){
-    Navigator.of(_context).pushNamed("/loginview");
+    Navigator.of(_context).popAndPushNamed("/loginview");
   }
 }

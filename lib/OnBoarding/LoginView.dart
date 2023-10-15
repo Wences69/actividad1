@@ -51,6 +51,6 @@ class LoginView extends StatelessWidget {
     }
   }
   void onClickRegistrar(){
-    Navigator.of(_context).pushNamed("/registerview");
+    Navigator.of(_context).popAndPushNamed("/registerview");
   }
 }
