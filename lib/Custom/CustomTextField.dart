@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomTextFormField extends StatelessWidget{
+class CustomTextField extends StatelessWidget{
 
   String sLabel;
   TextEditingController tecController;
@@ -8,8 +8,9 @@ class CustomTextFormField extends StatelessWidget{
   double dPaddingH;
   double dPaddingV;
   int? iMaxLenght;
+  final int? iMaxLines = null; //Siempre va a estar definido en nulo para que haga saltos de carro
 
-  CustomTextFormField({Key? key,
+  CustomTextField({Key? key,
     required this.tecController,
     this.sLabel="",
     this.blIsPassword=false,
@@ -24,12 +25,13 @@ class CustomTextFormField extends StatelessWidget{
     return Padding(padding: EdgeInsets.symmetric(horizontal: dPaddingH, vertical: dPaddingV),
       child: Row(children: [
         Flexible(
-          child: TextFormField(
+          child: TextField(
               controller: tecController,
               obscureText: blIsPassword,
               enableSuggestions: !blIsPassword,
               autocorrect: !blIsPassword,
               maxLength: iMaxLenght,
+              maxLines: iMaxLines,
               decoration: InputDecoration(
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8)),
