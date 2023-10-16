@@ -20,7 +20,7 @@ class RegisterView extends StatelessWidget {
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CustomTextFormField(tecController: tecUsername, sLabel: 'Escribe tu usuario'),
+            CustomTextFormField(tecController: tecUsername, sLabel: 'Escribe tu correo'),
             CustomTextFormField(tecController: tecPassword, sLabel: 'Escribe tu contraseña', blIsPassword: true),
             CustomTextFormField(tecController: tecRepass, sLabel: 'Vuelva a escribir su contraseña', blIsPassword: true),
             Row(
@@ -43,7 +43,7 @@ class RegisterView extends StatelessWidget {
           email: tecUsername.text,
           password: tecPassword.text,
         );
-        Navigator.of(_context).popAndPushNamed("/loginview");
+        Navigator.of(_context).popAndPushNamed("/perfilview");
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           print('The password provided is too weak.');

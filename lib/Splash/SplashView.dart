@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,9 @@ import 'package:flutter/material.dart';
 
   class _SplashViewState extends State<SplashView> {
 
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+
     @override
     void initState() {
       super.initState();
@@ -19,7 +23,16 @@ import 'package:flutter/material.dart';
     void checkSession() async {
       await Future.delayed(Duration(seconds: 4));
       if (FirebaseAuth.instance.currentUser != null) {
-        Navigator.of(context).popAndPushNamed("/homeview");
+
+        DocumentSnapshot<Map<String, dynamic>> perfil = await db.collection("Users").doc(uid).get();
+
+        if(perfil.exists){
+          Navigator.of(context).popAndPushNamed("/homeview");
+        }
+
+        else {
+          Navigator.of(context).popAndPushNamed("/perfilview");
+        }
       }
       else {
         Navigator.of(context).popAndPushNamed("/loginview");

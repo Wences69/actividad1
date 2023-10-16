@@ -9,11 +9,14 @@ import '../Custom/CustomTextFormField.dart';
 
 class PerfilView extends StatelessWidget{
   late BuildContext _context;
+
   TextEditingController tecName=TextEditingController();
   TextEditingController tecAge=TextEditingController();
   TextEditingController tecUsername=TextEditingController();
   TextEditingController tecBio=TextEditingController();
+
   FirebaseFirestore db = FirebaseFirestore.instance;
+  String uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -40,15 +43,20 @@ class PerfilView extends StatelessWidget{
     );
   }
 
-  void onClickAceptar(){
+  Future<void> onClickAceptar() async {
     final user = <String, dynamic>{
       "name" : tecName.text,
       "age" : int.parse(tecAge.text),
       "username" : tecUsername.text,
       "bio" : tecBio.text
     };
-    String uidUser = FirebaseAuth.instance.currentUser!.uid;
-    db.collection("Users").doc(uidUser).set(user);
+
+    await db.collection("Users").doc(uid).set(user);
+
+    Navigator.of(_context).popAndPushNamed("/homeview");
+
   }
-  void onClickCancelar(){}
+  void onClickCancelar(){
+    FirebaseAuth.instance.signOut();
+  }
 }

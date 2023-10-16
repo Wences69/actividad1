@@ -19,7 +19,7 @@ class LoginView extends StatelessWidget {
       body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          CustomTextFormField(tecController: tecUsername, sLabel: 'Escribe tu usuario'),
+          CustomTextFormField(tecController: tecUsername, sLabel: 'Escribe tu correo'),
           CustomTextFormField(tecController: tecPassword, sLabel: 'Escribe tu contraseña', blIsPassword: true),
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -36,7 +36,7 @@ class LoginView extends StatelessWidget {
   void onClickAceptar() async{
 
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: tecUsername.text,
         password: tecPassword.text,
       );
