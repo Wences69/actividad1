@@ -27,9 +27,9 @@ class PerfilView extends StatelessWidget{
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CustomTextFormField(tecController: tecName, sLabel: 'Escribe tu nombre'),
-            CustomTextFormField(tecController: tecAge, sLabel: 'Escribe tu edad'),
-            CustomTextFormField(tecController: tecUsername, sLabel: 'Escribe tu nombre de usuario'),
+            CustomTextFormField(tecController: tecName, sLabel: 'Nombre completo'),
+            CustomTextFormField(tecController: tecAge, sLabel: 'Edad'),
+            CustomTextFormField(tecController: tecUsername, sLabel: 'Nombre de usuario'),
             CustomTextField(tecController: tecBio, sLabel: 'Biografía...', iMaxLenght: 50),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

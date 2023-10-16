@@ -20,8 +20,8 @@ class RegisterView extends StatelessWidget {
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CustomTextFormField(tecController: tecUsername, sLabel: 'Escribe tu correo'),
-            CustomTextFormField(tecController: tecPassword, sLabel: 'Escribe tu contraseña', blIsPassword: true),
+            CustomTextFormField(tecController: tecUsername, sLabel: 'Correo electrónico'),
+            CustomTextFormField(tecController: tecPassword, sLabel: 'Contraseña', blIsPassword: true),
             CustomTextFormField(tecController: tecRepass, sLabel: 'Vuelva a escribir su contraseña', blIsPassword: true),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
