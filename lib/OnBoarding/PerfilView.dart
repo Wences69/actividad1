@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../Custom/CustomAppBar.dart';
@@ -11,6 +13,7 @@ class PerfilView extends StatelessWidget{
   TextEditingController tecAge=TextEditingController();
   TextEditingController tecUsername=TextEditingController();
   TextEditingController tecBio=TextEditingController();
+  FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class PerfilView extends StatelessWidget{
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  CustomButton(sNombre: 'Cancelar', onPressed: onClickRegistrar),
+                  CustomButton(sNombre: 'Cancelar', onPressed: onClickCancelar),
                   CustomButton(sNombre: 'Aceptar', onPressed: onClickAceptar),
                 ]
             )
@@ -38,9 +41,14 @@ class PerfilView extends StatelessWidget{
   }
 
   void onClickAceptar(){
-
+    final user = <String, dynamic>{
+      "name" : tecName.text,
+      "age" : int.parse(tecAge.text),
+      "username" : tecUsername.text,
+      "bio" : tecBio.text
+    };
+    String uidUser = FirebaseAuth.instance.currentUser!.uid;
+    db.collection("Users").doc(uidUser).set(user);
   }
-  void onClickRegistrar(){
-    Navigator.of(_context).popAndPushNamed("/registerview");
-  }
+  void onClickCancelar(){}
 }
