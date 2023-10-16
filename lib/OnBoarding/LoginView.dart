@@ -1,5 +1,6 @@
 import 'package:actividad1/Custom/CustomButton.dart';
 import 'package:actividad1/Custom/CustomTextFormField.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Custom/CustomAppBar.dart';
@@ -7,6 +8,10 @@ import '../Custom/CustomAppBar.dart';
 class LoginView extends StatelessWidget {
 
   late BuildContext _context;
+
+  FirebaseFirestore db = FirebaseFirestore.instance;
+  String? uid = FirebaseAuth.instance.currentUser?.uid;
+
   TextEditingController tecUsername=TextEditingController();
   TextEditingController tecPassword=TextEditingController();
 
@@ -19,8 +24,8 @@ class LoginView extends StatelessWidget {
       body: Column(
       mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          CustomTextFormField(tecController: tecUsername, sLabel: 'Escribe tu correo'),
-          CustomTextFormField(tecController: tecPassword, sLabel: 'Escribe tu contraseña', blIsPassword: true),
+          CustomTextFormField(tecController: tecUsername, sLabel: 'Correo electrónico'),
+          CustomTextFormField(tecController: tecPassword, sLabel: 'Contraseña', blIsPassword: true),
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -40,7 +45,15 @@ class LoginView extends StatelessWidget {
         email: tecUsername.text,
         password: tecPassword.text,
       );
-      Navigator.of(_context).popAndPushNamed("/homeview");
+      DocumentSnapshot<Map<String, dynamic>> perfil = await db.collection("Users").doc(uid).get();
+
+      if(perfil.exists){
+        Navigator.of(_context).popAndPushNamed("/homeview");
+      }
+
+      else {
+        Navigator.of(_context).popAndPushNamed("/perfilview");
+      }
 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
