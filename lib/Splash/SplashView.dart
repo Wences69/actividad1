@@ -22,6 +22,7 @@ class _SplashViewState extends State<SplashView> {
 
   void checkSession() async {
     await Future.delayed(Duration(seconds: 4));
+
     if (FirebaseAuth.instance.currentUser != null) {
       DocumentSnapshot<Map<String, dynamic>> perfil = await db.collection("Users").doc(uid).get();
 

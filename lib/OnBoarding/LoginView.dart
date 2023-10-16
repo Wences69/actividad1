@@ -38,23 +38,30 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  void onClickAceptar() async{
-
+  void onClickAceptar() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: tecUsername.text,
         password: tecPassword.text,
-      );
-      DocumentSnapshot<Map<String, dynamic>> perfil = await db.collection("Users").doc(uid).get();
+      ).then((userCredential) async {
 
-      if(perfil.exists){
-        Navigator.of(_context).popAndPushNamed("/homeview");
-      }
+        if (userCredential.user != null) {
 
-      else {
-        Navigator.of(_context).popAndPushNamed("/perfilview");
-      }
+          DocumentSnapshot<Map<String, dynamic>> perfil =
+          await db.collection("Users").doc(userCredential.user!.uid).get();
 
+          if (perfil.exists) {
+            Navigator.of(_context).popAndPushNamed("/homeview");
+          }
+          else {
+            Navigator.of(_context).popAndPushNamed("/perfilview");
+          }
+        }
+
+        else {
+          Navigator.of(_context).popAndPushNamed("/loginview");
+        }
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -63,6 +70,7 @@ class LoginView extends StatelessWidget {
       }
     }
   }
+
   void onClickRegistrar(){
     Navigator.of(_context).popAndPushNamed("/registerview");
   }

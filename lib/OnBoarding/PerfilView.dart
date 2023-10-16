@@ -58,5 +58,7 @@ class PerfilView extends StatelessWidget{
   }
   void onClickCancelar(){
     FirebaseAuth.instance.signOut();
+
+    Navigator.of(_context).popAndPushNamed("/loginview");
   }
 }
