@@ -1,4 +1,5 @@
 import 'package:actividad1/Custom/CustomButton.dart';
+import 'package:actividad1/Custom/CustomSnackBar.dart';
 import 'package:actividad1/Custom/CustomTextFormField.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,7 +42,7 @@ class LoginView extends StatelessWidget {
 
   void onClickAceptar() async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: tecUsername.text,
           password: tecPassword.text
       );
@@ -66,9 +67,9 @@ class LoginView extends StatelessWidget {
 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        CustomSnackbar(sMensaje: 'Ningún usuario encontrado para ese correo electrónico').show(_context);
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        CustomSnackbar(sMensaje: 'Contraseña incorrecta proporcionada para ese usuario').show(_context);
       }
     }
   }

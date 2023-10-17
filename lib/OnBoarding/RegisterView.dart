@@ -1,3 +1,4 @@
+import 'package:actividad1/Custom/CustomSnackBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Custom/CustomAppBar.dart';
@@ -36,6 +37,7 @@ class RegisterView extends StatelessWidget {
   }
 
   void onClickAceptar() async {
+    if(tecUsername.text==null&&tecPassword.text==null&&tecRepass.text==null);
     if (tecPassword.text==tecRepass.text) {
       try {
 
@@ -46,16 +48,16 @@ class RegisterView extends StatelessWidget {
         Navigator.of(_context).popAndPushNamed("/perfilview");
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
-          print('The password provided is too weak.');
+          CustomSnackbar(sMensaje: 'La contraseña es muy débil').show(_context);
         } else if (e.code == 'email-already-in-use') {
-          print('The account already exists for that email.');
+          CustomSnackbar(sMensaje: 'Ya existe una cuenta con este correo').show(_context);
         }
       } catch (e) {
         print(e);
       }
     }
     else {
-      print('Las contraseñas no coinciden');
+      CustomSnackbar(sMensaje: 'Las contraseñas no coinciden').show(_context);
     }
   }
 
