@@ -37,28 +37,57 @@ class RegisterView extends StatelessWidget {
   }
 
   void onClickAceptar() async {
-    if(tecUsername.text==null&&tecPassword.text==null&&tecRepass.text==null);
-    if (tecPassword.text==tecRepass.text) {
-      try {
+    String errorMessage = checkFields();
 
+    if(errorMessage.isNotEmpty){
+      CustomSnackbar(sMensaje: errorMessage).show(_context);
+    }
+
+    else if (errorMessage.isEmpty) {
+      try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: tecUsername.text,
           password: tecPassword.text,
         );
         Navigator.of(_context).popAndPushNamed("/perfilview");
-      } on FirebaseAuthException catch (e) {
+      }
+
+      on FirebaseAuthException catch (e) {
+
         if (e.code == 'weak-password') {
           CustomSnackbar(sMensaje: 'La contraseña es muy débil').show(_context);
-        } else if (e.code == 'email-already-in-use') {
+        }
+
+        else if (e.code == 'email-already-in-use') {
           CustomSnackbar(sMensaje: 'Ya existe una cuenta con este correo').show(_context);
         }
-      } catch (e) {
+      }
+      catch (e) {
         print(e);
       }
     }
-    else {
-      CustomSnackbar(sMensaje: 'Las contraseñas no coinciden').show(_context);
+  }
+
+  String checkFields() {
+    StringBuffer errorMessage = StringBuffer();
+
+    if (tecUsername.text.isEmpty && tecPassword.text.isEmpty && tecRepass.text.isEmpty) {
+      errorMessage.write('Por favor, complete todos los campos');
     }
+
+    else if (tecUsername.text.isEmpty) {
+      errorMessage.write('Por favor, complete el campo de correo electrónico');
+    }
+
+    else if (tecPassword.text.isEmpty) {
+      errorMessage.write('Por favor, complete el campo de contraseña');
+    }
+
+    else if (tecRepass.text.isEmpty) {
+      errorMessage.write('Por favor, complete el campo de confirmación de contraseña');
+    }
+
+    return errorMessage.toString();
   }
 
   void onClickCancelar() {
