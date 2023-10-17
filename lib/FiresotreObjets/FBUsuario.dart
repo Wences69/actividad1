@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
-class FBUsuario{
+class FBUsuario {
 
   final String name;
   final int age;
   final String username;
   final String bio;
 
-  FBUsuario({
+  FBUsuario ({
     required this.name,
     required this.age,
     required this.username,
@@ -29,7 +28,7 @@ class FBUsuario{
 
   }
 
-  Map<String, dynamic> toFirestore(){
+  Map<String, dynamic> toFirestore() {
     return {
       if (name != null) "name" : name,
       if (age != null) "age" : age,

@@ -36,7 +36,7 @@ class RegisterView extends StatelessWidget {
   }
 
   void onClickAceptar() async {
-    if(tecPassword.text==tecRepass.text) {
+    if (tecPassword.text==tecRepass.text) {
       try {
 
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -54,12 +54,12 @@ class RegisterView extends StatelessWidget {
         print(e);
       }
     }
-    else{
+    else {
       print('Las contraseñas no coinciden');
     }
   }
 
-  void onClickCancelar(){
+  void onClickCancelar() {
     Navigator.of(_context).popAndPushNamed("/loginview");
   }
 }

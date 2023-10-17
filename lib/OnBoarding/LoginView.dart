@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Custom/CustomAppBar.dart';
+import '../FiresotreObjets/FBUsuario.dart';
 
 class LoginView extends StatelessWidget {
 
@@ -40,28 +41,29 @@ class LoginView extends StatelessWidget {
 
   void onClickAceptar() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: tecUsername.text,
-        password: tecPassword.text,
-      ).then((userCredential) async {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: tecUsername.text,
+          password: tecPassword.text
+      );
 
-        if (userCredential.user != null) {
+      String uid=FirebaseAuth.instance.currentUser!.uid;
 
-          DocumentSnapshot<Map<String, dynamic>> perfil =
-          await db.collection("Users").doc(userCredential.user!.uid).get();
+      DocumentReference<FBUsuario> ref=db.collection("Users")
+          .doc(uid)
+          .withConverter(fromFirestore: FBUsuario.fromFirestore,
+        toFirestore: (FBUsuario usuario, _) => usuario.toFirestore(),);
 
-          if (perfil.exists) {
-            Navigator.of(_context).popAndPushNamed("/homeview");
-          }
-          else {
-            Navigator.of(_context).popAndPushNamed("/perfilview");
-          }
-        }
 
-        else {
-          Navigator.of(_context).popAndPushNamed("/loginview");
-        }
-      });
+      DocumentSnapshot<FBUsuario> docSnap=await ref.get();
+      FBUsuario usuario=docSnap.data()!;
+
+      if (usuario!=null) {
+        Navigator.of(_context).popAndPushNamed("/homeview");
+      }
+      else {
+        Navigator.of(_context).popAndPushNamed("/perfilview");
+      }
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -71,7 +73,7 @@ class LoginView extends StatelessWidget {
     }
   }
 
-  void onClickRegistrar(){
+  void onClickRegistrar() {
     Navigator.of(_context).popAndPushNamed("/registerview");
   }
 }

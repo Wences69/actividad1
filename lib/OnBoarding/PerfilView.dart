@@ -7,7 +7,7 @@ import '../Custom/CustomButton.dart';
 import '../Custom/CustomTextField.dart';
 import '../Custom/CustomTextFormField.dart';
 
-class PerfilView extends StatelessWidget{
+class PerfilView extends StatelessWidget {
   late BuildContext _context;
 
   TextEditingController tecName=TextEditingController();
@@ -44,7 +44,7 @@ class PerfilView extends StatelessWidget{
   }
 
   Future<void> onClickAceptar() async {
-    final user = <String, dynamic>{
+    final user = <String, dynamic> {
       "name" : tecName.text,
       "age" : int.parse(tecAge.text),
       "username" : tecUsername.text,
@@ -56,7 +56,7 @@ class PerfilView extends StatelessWidget{
     Navigator.of(_context).popAndPushNamed("/homeview");
 
   }
-  void onClickCancelar(){
+  void onClickCancelar() {
     FirebaseAuth.instance.signOut();
 
     Navigator.of(_context).popAndPushNamed("/loginview");
