@@ -31,7 +31,6 @@ class _SplashViewState extends State<SplashView>{
           .withConverter(fromFirestore: FBUsuario.fromFirestore,
         toFirestore: (FBUsuario usuario, _) => usuario.toFirestore(),);
 
-
       DocumentSnapshot<FBUsuario> docSnap=await ref.get();
       FBUsuario usuario=docSnap.data()!;
 

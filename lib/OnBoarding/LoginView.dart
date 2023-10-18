@@ -64,7 +64,7 @@ class LoginView extends StatelessWidget {
           toFirestore: (FBUsuario usuario, _) => usuario.toFirestore(),);
 
         DocumentSnapshot<FBUsuario> docSnap = await ref.get();
-        FBUsuario? usuario = docSnap.data();
+        FBUsuario usuario = docSnap.data()!;
 
         if (usuario != null) {
           Navigator.of(_context).popAndPushNamed("/homeview");
