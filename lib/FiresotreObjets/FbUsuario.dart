@@ -1,25 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FBUsuario {
+class FbUsuario {
 
   final String name;
   final int age;
   final String username;
   final String bio;
 
-  FBUsuario ({
+  FbUsuario ({
     required this.name,
     required this.age,
     required this.username,
     required this.bio
   });
 
-  factory FBUsuario.fromFirestore(
+  factory FbUsuario.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> snapshot,
       SnapshotOptions? options,
       ) {
     final data = snapshot.data();
-    return FBUsuario(
+    return FbUsuario(
         name: data?['name'],
         age: data?['age'],
         username: data?['username'],

@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Custom/CustomAppBar.dart';
-import '../FiresotreObjets/FBUsuario.dart';
+import '../FiresotreObjets/FbUsuario.dart';
 
 class LoginView extends StatelessWidget {
 
@@ -58,13 +58,13 @@ class LoginView extends StatelessWidget {
 
         String uid = FirebaseAuth.instance.currentUser!.uid;
 
-        DocumentReference<FBUsuario> ref = db.collection("Users")
+        DocumentReference<FbUsuario> ref = db.collection("Users")
             .doc(uid)
-            .withConverter(fromFirestore: FBUsuario.fromFirestore,
-          toFirestore: (FBUsuario usuario, _) => usuario.toFirestore(),);
+            .withConverter(fromFirestore: FbUsuario.fromFirestore,
+          toFirestore: (FbUsuario usuario, _) => usuario.toFirestore(),);
 
-        DocumentSnapshot<FBUsuario> docSnap = await ref.get();
-        FBUsuario usuario = docSnap.data()!;
+        DocumentSnapshot<FbUsuario> docSnap = await ref.get();
+        FbUsuario usuario = docSnap.data()!;
 
         if (usuario != null) {
           Navigator.of(_context).popAndPushNamed("/homeview");
@@ -113,5 +113,3 @@ class LoginView extends StatelessWidget {
     return errorMessage.toString();
   }
 }
-
-

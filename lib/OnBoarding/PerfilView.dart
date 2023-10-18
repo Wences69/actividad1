@@ -1,4 +1,4 @@
-import 'package:actividad1/FiresotreObjets/FBUsuario.dart';
+import 'package:actividad1/FiresotreObjets/FbUsuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ class PerfilView extends StatelessWidget {
 
   Future<void> onClickAceptar() async {
 
-    FBUsuario user = FBUsuario(name: tecName.text, age: int.parse(tecAge.text), username: tecUsername.text, bio: tecBio.text);
+    FbUsuario user = FbUsuario(name: tecName.text, age: int.parse(tecAge.text), username: tecUsername.text, bio: tecBio.text);
 
     await db.collection("Users").doc(uid).set(user.toFirestore());
 
