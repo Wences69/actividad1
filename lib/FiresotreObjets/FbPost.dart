@@ -17,8 +17,8 @@ class FbPost{
       ) {
     final data = snapshot.data();
     return FbPost(
-        title: data?['title'],
-        body: data?['body']
+        title: data?['title'] != null ? data!['title'] : "xxxx",
+        body: data?['body'] != null ? data!['body'] : "xxxx"
     );
   }
 

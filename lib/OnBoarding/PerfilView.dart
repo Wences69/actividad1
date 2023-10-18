@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../Custom/CustomAppBar.dart';
-import '../Custom/CustomButton.dart';
-import '../Custom/CustomTextField.dart';
-import '../Custom/CustomTextFormField.dart';
+import '../Custom/Widgets/CustomAppBar.dart';
+import '../Custom/Widgets/CustomButton.dart';
+import '../Custom/Widgets/CustomTextField.dart';
+import '../Custom/Widgets/CustomTextFormField.dart';
 
 class PerfilView extends StatelessWidget {
   late BuildContext _context;

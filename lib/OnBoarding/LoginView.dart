@@ -1,10 +1,10 @@
-import 'package:actividad1/Custom/CustomButton.dart';
-import 'package:actividad1/Custom/CustomSnackBar.dart';
-import 'package:actividad1/Custom/CustomTextFormField.dart';
+import 'package:actividad1/Custom/Widgets/CustomButton.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../Custom/CustomAppBar.dart';
+import '../Custom/Widgets/CustomAppBar.dart';
+import '../Custom/Widgets/CustomSnackBar.dart';
+import '../Custom/Widgets/CustomTextFormField.dart';
 import '../FiresotreObjets/FbUsuario.dart';
 
 class LoginView extends StatelessWidget {

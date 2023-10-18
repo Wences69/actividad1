@@ -1,5 +1,6 @@
-import 'package:actividad1/Custom/CustomAppBar.dart';
-import 'package:actividad1/Custom/PostCellView.dart';
+import 'package:actividad1/Custom/Views/PostGridCellView.dart';
+import 'package:actividad1/Custom/Widgets/CustomAppBar.dart';
+import 'package:actividad1/Custom/Views/PostCellView.dart';
 import 'package:actividad1/FiresotreObjets/FbPost.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,7 @@ class _HomeViewState extends State<HomeView> {
   late FbUsuario userProfile;
   FirebaseFirestore db = FirebaseFirestore.instance;
   final List<FbPost> posts = [];
+  bool bIsList=false;
 
   @override
   void initState() {
@@ -58,12 +60,26 @@ class _HomeViewState extends State<HomeView> {
         backgroundColor: Colors.blueGrey.shade50,
         appBar: CustomAppBar(
             sTitulo: 'Bienvenid@ ${userProfile?.username ?? 'Invitado'}'),
-        body: ListView.builder(
-          itemBuilder: creadorDeItemLista,
-          itemCount: posts.length,
+          body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: <Color>[Colors.amber, Colors.white])
+            ),
+        child: bIsList?
+          ListView.separated(
+            padding: EdgeInsets.all(8),
+            itemCount: posts.length,
+            itemBuilder: creadorDeItemLista,
+            separatorBuilder: creadorDeSeparadorLista,
+            )
+        :
+          GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
+            itemCount: posts.length,
+            itemBuilder: creadorDeItemMatriz
+          )
         )
-    );
-  }
+      );
+    }
 
   Widget? creadorDeItemLista(BuildContext context, int index) {
     return PostCellView(sText: posts[index].title,
@@ -72,6 +88,13 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  Widget? creadorDeItemMatriz(BuildContext context, int index){
+    return PostGridCellView(sText: posts[index].title,
+        iColorCode: 0,
+        dFontSize: 60,
+        dHeight: 200,
+    );
+  }
   Widget creadorDeSeparadorLista(BuildContext context, int index) {
     return Column(
       children: [

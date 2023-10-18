@@ -1,9 +1,10 @@
-import 'package:actividad1/Custom/CustomSnackBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../Custom/CustomAppBar.dart';
-import '../Custom/CustomButton.dart';
-import '../Custom/CustomTextFormField.dart';
+
+import '../Custom/Widgets/CustomAppBar.dart';
+import '../Custom/Widgets/CustomButton.dart';
+import '../Custom/Widgets/CustomSnackBar.dart';
+import '../Custom/Widgets/CustomTextFormField.dart';
 
 class RegisterView extends StatelessWidget {
 
