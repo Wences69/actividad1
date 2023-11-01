@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:actividad1/Custom/Views/PostGridCellView.dart';
 import 'package:actividad1/Custom/Widgets/CustomAppBar.dart';
 import 'package:actividad1/Custom/Views/PostCellView.dart';
@@ -28,6 +30,9 @@ class _HomeViewState extends State<HomeView> {
       }
       else if (indice==1){
         bIsList=false;
+      }
+      else if (indice==2){
+        exit(0);
       }
     });
   }

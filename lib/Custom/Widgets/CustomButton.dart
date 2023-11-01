@@ -5,7 +5,7 @@ class CustomButton extends StatelessWidget {
   final Color cColorTexto;
   final double dFontSize;
   final Color cColorFondo;
-  final VoidCallback onPressed;
+  final Function()? onPressed;
 
   CustomButton({Key? key,
     required this.sNombre,
