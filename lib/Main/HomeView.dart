@@ -3,7 +3,6 @@ import 'package:actividad1/Custom/Widgets/CustomAppBar.dart';
 import 'package:actividad1/Custom/Views/PostCellView.dart';
 import 'package:actividad1/Custom/Widgets/CustomBottomMenu.dart';
 import 'package:actividad1/FiresotreObjets/FbPost.dart';
-import 'package:actividad1/Interfaces/BottomMenuEvents.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,15 +14,14 @@ class HomeView extends StatefulWidget {
   _HomeViewState createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> implements BottomMenuEvents {
+class _HomeViewState extends State<HomeView> {
   late FbUsuario userProfile;
   FirebaseFirestore db = FirebaseFirestore.instance;
   final List<FbPost> posts = [];
   bool bIsList=false;
 
-  @override
+
   void onBottomMenuPressed(int indice) {
-    print("--------> HOME!!!!!"+indice.toString());
     setState(() {
       if(indice==0){
         bIsList=true;
@@ -76,7 +74,7 @@ class _HomeViewState extends State<HomeView> implements BottomMenuEvents {
         appBar: CustomAppBar(
             sTitulo: 'Bienvenid@ ${userProfile?.username ?? 'Invitado'}'),
           body: celdasOLista(bIsList),
-        bottomNavigationBar: CustomBottomMenu(events: this),
+        bottomNavigationBar: CustomBottomMenu(onBotonesClicked: onBottomMenuPressed),
       );
     }
 
