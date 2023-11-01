@@ -19,6 +19,7 @@ class PostGridCellView extends StatelessWidget{
     Widget build(BuildContext context) {
     return FractionallySizedBox(
       child: Container(
+        height: dHeight,
           decoration: BoxDecoration(
           image: DecorationImage(
           opacity: 0.3,
@@ -29,7 +30,6 @@ class PostGridCellView extends StatelessWidget{
           color: Colors.amber[iColorCode],
       child: Column(
         children: [
-          Image.asset("resources/kyty_logo_nofondo.png",width: 70, height: 70),
           Text(sText,style: TextStyle(fontSize: dFontSize)),
           TextButton(onPressed: null, child: Text("+",style: TextStyle(fontSize: dFontSize)))
           ],

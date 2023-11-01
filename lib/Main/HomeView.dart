@@ -1,7 +1,9 @@
 import 'package:actividad1/Custom/Views/PostGridCellView.dart';
 import 'package:actividad1/Custom/Widgets/CustomAppBar.dart';
 import 'package:actividad1/Custom/Views/PostCellView.dart';
+import 'package:actividad1/Custom/Widgets/CustomBottomMenu.dart';
 import 'package:actividad1/FiresotreObjets/FbPost.dart';
+import 'package:actividad1/Interfaces/BottomMenuEvents.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +15,24 @@ class HomeView extends StatefulWidget {
   _HomeViewState createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeViewState extends State<HomeView> implements BottomMenuEvents {
   late FbUsuario userProfile;
   FirebaseFirestore db = FirebaseFirestore.instance;
   final List<FbPost> posts = [];
   bool bIsList=false;
+
+  @override
+  void onBottomMenuPressed(int indice) {
+    print("--------> HOME!!!!!"+indice.toString());
+    setState(() {
+      if(indice==0){
+        bIsList=true;
+      }
+      else if (indice==1){
+        bIsList=false;
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -60,24 +75,8 @@ class _HomeViewState extends State<HomeView> {
         backgroundColor: Colors.blueGrey.shade50,
         appBar: CustomAppBar(
             sTitulo: 'Bienvenid@ ${userProfile?.username ?? 'Invitado'}'),
-          body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: <Color>[Colors.amber, Colors.white])
-            ),
-        child: bIsList?
-          ListView.separated(
-            padding: EdgeInsets.all(8),
-            itemCount: posts.length,
-            itemBuilder: creadorDeItemLista,
-            separatorBuilder: creadorDeSeparadorLista,
-            )
-        :
-          GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
-            itemCount: posts.length,
-            itemBuilder: creadorDeItemMatriz
-          )
-        )
+          body: celdasOLista(bIsList),
+        bottomNavigationBar: CustomBottomMenu(events: this),
       );
     }
 
@@ -91,8 +90,8 @@ class _HomeViewState extends State<HomeView> {
   Widget? creadorDeItemMatriz(BuildContext context, int index){
     return PostGridCellView(sText: posts[index].title,
         iColorCode: 0,
-        dFontSize: 60,
-        dHeight: 200,
+        dFontSize: 20,
+        dHeight: 400,
     );
   }
   Widget creadorDeSeparadorLista(BuildContext context, int index) {
@@ -102,4 +101,24 @@ class _HomeViewState extends State<HomeView> {
       ],
     );
   }
+
+  Widget? celdasOLista(bool isList){
+    if(isList) {
+      return ListView.separated(
+        padding: EdgeInsets.all(8),
+        itemCount: posts.length,
+        itemBuilder: creadorDeItemLista,
+        separatorBuilder: creadorDeSeparadorLista,
+      );
+    }
+    else {
+      return GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
+          itemCount: posts.length,
+          itemBuilder: creadorDeItemMatriz
+      );
+    }
+  }
+
+
 }

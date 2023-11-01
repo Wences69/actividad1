@@ -56,8 +56,8 @@ class _SplashViewState extends State<SplashView>{
         body: Center(
             child: Column(
               children: [
-                Image.asset("resources/kyty_logo_nofondo.png", width: 300,
-                    height: 450),
+                Image.asset("resources/kyty_logo_nofondo.png", width: 200,
+                    height: 350),
                 CircularProgressIndicator(
                   color: Colors.white,
                   backgroundColor: Colors.cyanAccent,
