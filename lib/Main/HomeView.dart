@@ -4,6 +4,7 @@ import 'package:actividad1/Custom/Views/PostCellView.dart';
 import 'package:actividad1/Custom/Widgets/CustomBottomMenu.dart';
 import 'package:actividad1/Custom/Widgets/CustomSnackBar.dart';
 import 'package:actividad1/FiresotreObjets/FbPost.dart';
+import 'package:actividad1/OnBoarding/LoginView.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -38,15 +39,16 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void homeViewDrawerOnTap(int indice){
+    print("---->"+indice.toString());
     if(indice==0){
-
+      Navigator.of(context).popAndPushNamed('/homeview');
     }
     else if(indice==1){
 
     }
     else if(indice==2){
-      FirebaseAuth.instance.signOut();
-      Navigator.of(context).popAndPushNamed("/loginview");
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginView()),
+          ModalRoute.withName('/loginview'));
     }
   }
 
@@ -101,33 +103,8 @@ class _HomeViewState extends State<HomeView> {
       drawer: CustomDrawer(
         cColorFondo: Colors.black, // Personaliza el color de fondo del cajón
         onItemTap: homeViewDrawerOnTap,
-        children: <Widget>[
-          UserAccountsDrawerHeader(
-            accountName: Text(userProfile?.name ?? 'Invitado'),
-            accountEmail: Text(userProfile?.username ?? 'Usuario Invitado'),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage("resources/kyty_logo_fondo.png"),
-            ),
-          decoration: BoxDecoration(color: Colors.blue[900]), // Color de fondo parte de arriba
-          ),
-          ListTile(
-            leading: Icon(Icons.home, color: Colors.white),
-            title: Text("Home", style: TextStyle(color: Colors.white)),
-            onTap: () {Navigator.of(context).popAndPushNamed('/homeview');},
-          ),
-          ListTile(
-            leading: Icon(Icons.settings, color: Colors.white),
-            title: Text("Settings", style: TextStyle(color: Colors.white)),
-            onTap: () {
-              // Acción al hacer clic en Settings
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.exit_to_app, color: Colors.red),
-            title: Text('Cerrar Sesión', style: TextStyle(color: Colors.red)),
-            onTap: _signOut,
-          ),
-        ],
+        name: userProfile.name,
+        username: userProfile.username,
       ),
       body: celdasOLista(bIsList),
       bottomNavigationBar: CustomBottomMenu(onBotonesClicked: onBottomMenuPressed),
@@ -175,12 +152,4 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
-  Future<void> _signOut() async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      Navigator.of(context).popAndPushNamed('/loginview');
-    } catch (e) {
-      CustomSnackbar(sMensaje: "Error al cerrar sesión");
-    }
-  }
 }
