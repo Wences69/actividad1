@@ -6,6 +6,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color cColorTexto;
   final Color cColorSombra;
   final bool boolCentrarTitulo;
+  final List<Widget> actions; // Lista de acciones (iconos) a la derecha del AppBar
 
   CustomAppBar({
     Key? key,
@@ -14,6 +15,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.cColorTexto = Colors.white,
     this.cColorSombra = Colors.deepOrange,
     this.boolCentrarTitulo = true,
+    this.actions = const [], // Inicializa la lista de acciones vacía
   }) : super(key: key);
 
   @override
@@ -33,20 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       centerTitle: boolCentrarTitulo,
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search, color: cColorTexto), // Utiliza el color de texto personalizado
-          onPressed: () {
-            // Agregar acción de búsqueda
-          },
-        ),
-        IconButton(
-          icon: Icon(Icons.settings, color: cColorTexto), // Utiliza el color de texto personalizado
-          onPressed: () {
-            // Agregar acción de configuración
-          },
-        ),
-      ],
+      actions: actions, // Agrega las acciones personalizadas a la derecha del AppBar
     );
   }
 }
