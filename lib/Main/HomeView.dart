@@ -5,6 +5,7 @@ import 'package:actividad1/Custom/Widgets/CustomBottomMenu.dart';
 import 'package:actividad1/Custom/Widgets/CustomSnackBar.dart';
 import 'package:actividad1/FiresotreObjets/FbPost.dart';
 import 'package:actividad1/OnBoarding/LoginView.dart';
+import 'package:actividad1/Singeltone/DataHolder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -111,11 +112,17 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  void onItemListClicked(int index){
+    DataHolder().selectedPost=posts[index];
+    Navigator.of(context).pushNamed("/postview");
+  }
 
   Widget? creadorDeItemLista(BuildContext context, int index) {
     return PostCellView(sText: posts[index].title,
+      iPosicion: index,
       dFontSize: 20,
-      iColorCode: 0,
+      iColorCode: 300,
+      onItemListClickedFun: onItemListClicked
     );
   }
 
