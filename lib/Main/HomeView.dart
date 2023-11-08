@@ -109,7 +109,7 @@ class _HomeViewState extends State<HomeView> {
       body: celdasOLista(bIsList),
       bottomNavigationBar: CustomBottomMenu(onBotonesClicked: onBottomMenuPressed),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {Navigator.of(context).pushNamed('/postcreateview');},
+        onPressed: () {Navigator.of(context).pushNamed('/postcreateview');  },
         backgroundColor: Colors.blue[900],
         child: Icon(Icons.add, color: Colors.orangeAccent),
       ),
@@ -119,6 +119,7 @@ class _HomeViewState extends State<HomeView> {
 
   void onItemListClicked(int index){
     DataHolder().selectedPost=posts[index];
+    DataHolder().saveSelectedPostInCache();
     Navigator.of(context).pushNamed("/postview");
   }
 

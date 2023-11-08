@@ -1,4 +1,5 @@
 import 'package:actividad1/FiresotreObjets/FbPost.dart';
+import 'package:actividad1/Singeltone/DataHolder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -45,11 +46,7 @@ class PostCreateView extends StatelessWidget {
 
   void postear() {
     FbPost postNuevo = FbPost(title: tecTitle.text, body: tecBody.text);
-    CollectionReference<FbPost> postsRef = db.collection("Posts").withConverter(
-        fromFirestore: FbPost.fromFirestore, toFirestore: (FbPost post, _) => post.toFirestore());
-    postsRef.add(postNuevo).then((_) {
-      Navigator.of(_context).pushReplacementNamed("/homeview");
-    });
+    DataHolder().insertPostEnFB(postNuevo);
   }
 
   void cancelar() {
