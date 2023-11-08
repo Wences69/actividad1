@@ -1,4 +1,5 @@
 import 'package:actividad1/Custom/Widgets/CustomButton.dart';
+import 'package:actividad1/Singeltone/DataHolder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +11,6 @@ import '../FiresotreObjets/FbUsuario.dart';
 class LoginView extends StatelessWidget {
 
   late BuildContext _context;
-
-  FirebaseFirestore db = FirebaseFirestore.instance;
-  String? uid = FirebaseAuth.instance.currentUser?.uid;
 
   TextEditingController tecUsername = TextEditingController();
   TextEditingController tecPassword = TextEditingController();
@@ -46,21 +44,8 @@ class LoginView extends StatelessWidget {
       CustomSnackbar(sMensaje: errorMessage).show(_context);
     }
     else if (errorMessage.isEmpty) {
-      try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: tecUsername.text,
-          password: tecPassword.text,
-        );
 
-        String uid = FirebaseAuth.instance.currentUser!.uid;
-
-        DocumentReference<FbUsuario> ref = db.collection("Users")
-            .doc(uid)
-            .withConverter(fromFirestore: FbUsuario.fromFirestore,
-          toFirestore: (FbUsuario usuario, _) => usuario.toFirestore(),);
-
-        DocumentSnapshot<FbUsuario> docSnap = await ref.get();
-        FbUsuario usuario = docSnap.data()!;
+        FbUsuario usuario = await DataHolder().fbadmin.inicioDeSesionCompleto(tecUsername, tecPassword);
 
         if (usuario != null) {
           Navigator.of(_context).popAndPushNamed("/homeview");
@@ -68,22 +53,7 @@ class LoginView extends StatelessWidget {
         else {
           Navigator.of(_context).popAndPushNamed("/perfilview");
         }
-      }
 
-      on FirebaseAuthException catch (e) {
-
-        if (e.code == 'user-not-found') {
-          CustomSnackbar(
-              sMensaje: 'Ningún usuario encontrado para ese correo electrónico')
-              .show(_context);
-        }
-
-        else if (e.code == 'wrong-password') {
-          CustomSnackbar(
-              sMensaje: 'Contraseña incorrecta proporcionada para ese usuario')
-              .show(_context);
-        }
-      }
     }
   }
 

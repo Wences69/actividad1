@@ -1,3 +1,4 @@
+import 'package:actividad1/Singeltone/DataHolder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,16 +23,9 @@ class _SplashViewState extends State<SplashView>{
 
   void checkSession() async {
     await Future.delayed(Duration(seconds: 4));
-    if (FirebaseAuth.instance.currentUser != null) {
+    if (DataHolder().fbadmin.getCurrentUserID() != null) {
 
-      String uid=FirebaseAuth.instance.currentUser!.uid;
-
-      DocumentReference<FbUsuario> ref=db.collection("Users")
-          .doc(uid)
-          .withConverter(fromFirestore: FbUsuario.fromFirestore,
-        toFirestore: (FbUsuario usuario, _) => usuario.toFirestore(),);
-
-      DocumentSnapshot<FbUsuario> docSnap=await ref.get();
+      DocumentSnapshot<FbUsuario> docSnap = await DataHolder().fbadmin.connectToAuth().get();
       FbUsuario usuario=docSnap.data()!;
 
       if (usuario!=null) {
