@@ -40,7 +40,6 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void homeViewDrawerOnTap(int indice){
-    print("---->"+indice.toString());
     if(indice==0){
       Navigator.of(context).popAndPushNamed('/homeview');
     }
@@ -109,6 +108,12 @@ class _HomeViewState extends State<HomeView> {
       ),
       body: celdasOLista(bIsList),
       bottomNavigationBar: CustomBottomMenu(onBotonesClicked: onBottomMenuPressed),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {Navigator.of(context).pushNamed('/postcreateview');},
+        backgroundColor: Colors.blue[900],
+        child: Icon(Icons.add, color: Colors.orangeAccent),
+      ),
+
     );
   }
 
@@ -128,9 +133,11 @@ class _HomeViewState extends State<HomeView> {
 
   Widget? creadorDeItemMatriz(BuildContext context, int index){
     return PostGridCellView(sText: posts[index].title,
+        iPosicion: index,
         iColorCode: 0,
         dFontSize: 20,
         dHeight: 400,
+        onItemListClickedFun: onItemListClicked
     );
   }
   Widget creadorDeSeparadorLista(BuildContext context, int index) {

@@ -11,7 +11,6 @@ class PostView extends StatelessWidget {
         children: [
           Text(DataHolder().selectedPost.title),
           Text(DataHolder().selectedPost.body),
-          Image.network("img"),
           IconButton(
             icon: Icon(Icons.favorite, color: Colors.red), // Icono de corazón para representar "like"
             onPressed: () {

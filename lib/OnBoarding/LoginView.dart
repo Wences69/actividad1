@@ -26,16 +26,12 @@ class LoginView extends StatelessWidget {
       body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CustomTextFormField(
-                tecController: tecUsername, sLabel: 'Correo electrónico'),
-            CustomTextFormField(tecController: tecPassword,
-                sLabel: 'Contraseña',
-                blIsPassword: true),
+            CustomTextFormField(tecController: tecUsername, sLabel: 'Correo electrónico'),
+            CustomTextFormField(tecController: tecPassword, sLabel: 'Contraseña', blIsPassword: true),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  CustomButton(
-                      sNombre: 'Registrar', onPressed: onClickRegistrar),
+                  CustomButton(sNombre: 'Registrar', onPressed: onClickRegistrar),
                   CustomButton(sNombre: 'Aceptar', onPressed: onClickAceptar),
                 ]
             )

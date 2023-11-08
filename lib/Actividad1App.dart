@@ -1,4 +1,5 @@
 import 'package:actividad1/Main/HomeView.dart';
+import 'package:actividad1/Main/PostCreateView.dart';
 import 'package:actividad1/Main/PostView.dart';
 import 'package:actividad1/OnBoarding/PerfilView.dart';
 import 'package:actividad1/OnBoarding/RegisterView.dart';
@@ -19,7 +20,8 @@ class Actividad1App extends StatelessWidget {
         '/homeview' :(context) => HomeView(),
         '/splashview' :(context) => SplashView(),
         '/perfilview' :(context) => PerfilView(),
-        '/postview' :(context) => PostView()
+        '/postview' :(context) => PostView(),
+        '/postcreateview' :(context) => PostCreateView()
       },
       initialRoute: '/splashview',
     );
