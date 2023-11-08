@@ -23,7 +23,7 @@ class FirebaseAdmin{
     return FirebaseAuth.instance;
   }
 
-  Future<void> loginFb(TextEditingController tecUsername, TextEditingController tecPassword) async {
+  /*Future<void> loginFb(TextEditingController tecUsername, TextEditingController tecPassword) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: tecUsername.text,
@@ -33,9 +33,10 @@ class FirebaseAdmin{
     } catch (e) {
       // Manejo de errores si el inicio de sesión falla
       print("Error en el inicio de sesión: $e");
-      throw e; // Opcionalmente, puedes lanzar el error para que sea manejado por quien llama a la función.
+      throw e; // Lanza el error para que sea manejado por quien llama a la función.
     }
   }
+
 
   DocumentReference<FbUsuario> connectToAuth(){
     DocumentReference<FbUsuario> ref = DataHolder().fbadmin.getFirestoreInstance().collection("Users")
@@ -47,11 +48,9 @@ class FirebaseAdmin{
 
   Future<FbUsuario> inicioDeSesionCompleto(tecUsername,tecPassword) async {
     loginFb(tecUsername, tecPassword);
-
     DocumentSnapshot<FbUsuario> docSnap = await connectToAuth().get();
 
     return docSnap.data()!;
+  }*/
 
-
-  }
 }

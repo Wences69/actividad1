@@ -25,7 +25,14 @@ class _SplashViewState extends State<SplashView>{
     await Future.delayed(Duration(seconds: 4));
     if (DataHolder().fbadmin.getCurrentUserID() != null) {
 
-      DocumentSnapshot<FbUsuario> docSnap = await DataHolder().fbadmin.connectToAuth().get();
+      String uid=FirebaseAuth.instance.currentUser!.uid;
+
+      DocumentReference<FbUsuario> ref=DataHolder().fbadmin.getFirestoreInstance().collection("Users")
+          .doc(DataHolder().fbadmin.getCurrentUserID())
+          .withConverter(fromFirestore: FbUsuario.fromFirestore,
+        toFirestore: (FbUsuario usuario, _) => usuario.toFirestore(),);
+
+      DocumentSnapshot<FbUsuario> docSnap=await ref.get();
       FbUsuario usuario=docSnap.data()!;
 
       if (usuario!=null) {

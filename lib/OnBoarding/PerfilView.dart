@@ -1,4 +1,5 @@
 import 'package:actividad1/FiresotreObjets/FbUsuario.dart';
+import 'package:actividad1/Singeltone/DataHolder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,6 @@ class PerfilView extends StatelessWidget {
   TextEditingController tecAge=TextEditingController();
   TextEditingController tecUsername=TextEditingController();
   TextEditingController tecBio=TextEditingController();
-
-  FirebaseFirestore db = FirebaseFirestore.instance;
-  String uid = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +46,13 @@ class PerfilView extends StatelessWidget {
 
     FbUsuario user = FbUsuario(name: tecName.text, age: int.parse(tecAge.text), username: tecUsername.text, bio: tecBio.text);
 
-    await db.collection("Users").doc(uid).set(user.toFirestore());
+    await DataHolder().fbadmin.getFirestoreInstance().collection("Users").doc(DataHolder().fbadmin.getCurrentUserID()).set(user.toFirestore());
 
     Navigator.of(_context).popAndPushNamed("/homeview");
 
   }
   void onClickCancelar() {
-    FirebaseAuth.instance.signOut();
+    DataHolder().fbadmin.getFirebaseAuthInstance().signOut();
     Navigator.of(_context).popAndPushNamed("/loginview");
   }
 }

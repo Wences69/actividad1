@@ -44,8 +44,19 @@ class LoginView extends StatelessWidget {
       CustomSnackbar(sMensaje: errorMessage).show(_context);
     }
     else if (errorMessage.isEmpty) {
+      try {
+        await DataHolder().fbadmin.getFirebaseAuthInstance().signInWithEmailAndPassword(
+          email: tecUsername.text,
+          password: tecPassword.text,
+        );
 
-        FbUsuario usuario = await DataHolder().fbadmin.inicioDeSesionCompleto(tecUsername, tecPassword);
+        DocumentReference<FbUsuario> ref = DataHolder().fbadmin.getFirestoreInstance().collection("Users")
+            .doc(DataHolder().fbadmin.getCurrentUserID())
+            .withConverter(fromFirestore: FbUsuario.fromFirestore,
+          toFirestore: (FbUsuario usuario, _) => usuario.toFirestore(),);
+
+        DocumentSnapshot<FbUsuario> docSnap = await ref.get();
+        FbUsuario usuario = docSnap.data()!;
 
         if (usuario != null) {
           Navigator.of(_context).popAndPushNamed("/homeview");
@@ -53,7 +64,18 @@ class LoginView extends StatelessWidget {
         else {
           Navigator.of(_context).popAndPushNamed("/perfilview");
         }
+      }
 
+      on FirebaseAuthException catch (e) {
+
+        if (e.code == 'user-not-found') {
+          CustomSnackbar(sMensaje: 'Ningún usuario encontrado para ese correo electrónico').show(_context);
+        }
+
+        else if (e.code == 'wrong-password') {
+          CustomSnackbar(sMensaje: 'Contraseña incorrecta proporcionada para ese usuario').show(_context);
+        }
+      }
     }
   }
 
