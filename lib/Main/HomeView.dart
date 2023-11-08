@@ -9,6 +9,7 @@ import 'package:actividad1/Singeltone/DataHolder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../Custom/Widgets/CustomDrawer.dart';
 import '../FiresotreObjets/FbUsuario.dart';
@@ -58,6 +59,13 @@ class _HomeViewState extends State<HomeView> {
     userProfile = FbUsuario(name: '', age: 0, username: '', bio: '');
     cargarPerfil();
     descargarPosts();
+    loadGeolocator();
+  }
+
+  void loadGeolocator() async{
+    Position ubi= await DataHolder().geolocAdmin.determinePosition();
+    print(ubi.toString());
+    DataHolder().geolocAdmin.recordLocationChanges();
   }
 
   void cargarPerfil() async {
