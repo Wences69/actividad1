@@ -84,7 +84,7 @@ class _HomeViewState extends State<HomeView> {
   void descargarPosts() async {
     CollectionReference<FbPost> ref = db.collection("Posts")
         .withConverter(fromFirestore: FbPost.fromFirestore,
-      toFirestore: (FbPost post, _) => post.toFirestore());
+        toFirestore: (FbPost post, _) => post.toFirestore());
 
 
     QuerySnapshot<FbPost> querySnapshot = await ref.get();
@@ -133,10 +133,10 @@ class _HomeViewState extends State<HomeView> {
 
   Widget? creadorDeItemLista(BuildContext context, int index) {
     return PostCellView(sText: posts[index].title,
-      iPosicion: index,
-      dFontSize: 20,
-      iColorCode: 300,
-      onItemListClickedFun: onItemListClicked
+        iPosicion: index,
+        dFontSize: 20,
+        iColorCode: 300,
+        onItemListClickedFun: onItemListClicked
     );
   }
 

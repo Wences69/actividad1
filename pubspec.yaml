@@ -39,6 +39,7 @@ dependencies:
   cloud_firestore: ^4.9.3
   shared_preferences: ^2.2.2
   geolocator: ^10.1.0
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:
