@@ -6,21 +6,30 @@ class PlatformAdmin{
   //int iANDROID_PLATFORM=0;
   //int iIOS_PLATFORM=1;
   //int iWEB_PLATFORM=2;
-  double dSCREEN_WIDTH=0;
-  double dSCREEN_HEIGHT=0;
-  late BuildContext context;
+  BuildContext context;
 
-  PlatformAdmin();
+  PlatformAdmin({required this.context});
 
+  String getPlatform() {
+    String platform;
+    if (isAndroidPlatform()) {
+      platform='android';
+    } else if (isIOSPlatform()) {
+      platform='ios';
+    } else if (isWebPlatform()) {
+      platform='web';
+    } else {
+      platform='Desconocido';
+    }
+    return platform;
+  }
 
   double getScreenWidth(BuildContext context){
-    dSCREEN_WIDTH=MediaQuery.of(context).size.width;
-    return dSCREEN_WIDTH;
+    return MediaQuery.of(context).size.width;
   }
 
   double getScreenHeight(BuildContext context){
-    dSCREEN_HEIGHT=MediaQuery.of(context).size.height;
-    return dSCREEN_HEIGHT;
+    return MediaQuery.of(context).size.height;
   }
 
   bool isAndroidPlatform(){
@@ -32,8 +41,7 @@ class PlatformAdmin{
   }
 
   bool isWebPlatform(){
-    return defaultTargetPlatform != TargetPlatform.android
-        && defaultTargetPlatform != TargetPlatform.iOS;
+    return kIsWeb;
     //&& defaultTargetPlatform != TargetPlatform.fuchsia
     //&& defaultTargetPlatform != TargetPlatform.linux
     //&& defaultTargetPlatform != TargetPlatform.windows

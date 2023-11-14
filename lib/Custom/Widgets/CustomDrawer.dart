@@ -1,3 +1,4 @@
+import 'package:actividad1/Singeltone/DataHolder.dart';
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -27,9 +28,9 @@ class CustomDrawer extends StatelessWidget {
           children: <Widget>[
             UserAccountsDrawerHeader(
               accountName: Text(name),
-              accountEmail: Text(username),
+              accountEmail: Text('@$username'),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage("resources/kyty_logo_fondo.png"),
+                backgroundImage: AssetImage('assets/${DataHolder().platformAdmin.getPlatform()}/img/kyty_logo_fondo.png'),
               ),
               decoration: BoxDecoration(color: Colors.blue[900]), // Color de fondo parte de arriba
             ),

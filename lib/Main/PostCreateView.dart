@@ -47,6 +47,7 @@ class PostCreateView extends StatelessWidget {
   void postear() {
     FbPost postNuevo = FbPost(title: tecTitle.text, body: tecBody.text);
     DataHolder().insertPostEnFB(postNuevo);
+    Navigator.pop(_context);
   }
 
   void cancelar() {

@@ -23,6 +23,7 @@ class FirebaseAdmin{
     return FirebaseAuth.instance;
   }
 
+
   /*Future<void> loginFb(TextEditingController tecUsername, TextEditingController tecPassword) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(

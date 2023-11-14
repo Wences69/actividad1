@@ -1,8 +1,7 @@
 import 'package:actividad1/Custom/Views/PostGridCellView.dart';
 import 'package:actividad1/Custom/Widgets/CustomAppBar.dart';
 import 'package:actividad1/Custom/Views/PostCellView.dart';
-import 'package:actividad1/Custom/Widgets/CustomBottomMenu.dart';
-import 'package:actividad1/Custom/Widgets/CustomSnackBar.dart';
+import 'package:actividad1/Custom/Widgets/CustomGnav.dart';
 import 'package:actividad1/FiresotreObjets/FbPost.dart';
 import 'package:actividad1/OnBoarding/LoginView.dart';
 import 'package:actividad1/Singeltone/DataHolder.dart';
@@ -21,9 +20,8 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   late FbUsuario userProfile;
-  FirebaseFirestore db = FirebaseFirestore.instance;
   final List<FbPost> posts = [];
-  bool bIsList=false;
+  bool bIsList=true;
 
 
   void onBottomMenuPressed(int indice) {
@@ -34,15 +32,15 @@ class _HomeViewState extends State<HomeView> {
       else if (indice==1){
         bIsList=false;
       }
-      /*else if (indice==2){
-        exit(0);
-      }*/
+      else if (indice==2){
+        Navigator.of(context).popAndPushNamed('/homeview');
+      }
     });
   }
 
   void homeViewDrawerOnTap(int indice){
     if(indice==0){
-      Navigator.of(context).popAndPushNamed('/homeview');
+      Navigator.of(context).pop();
     }
     else if(indice==1){
 
@@ -82,7 +80,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void descargarPosts() async {
-    CollectionReference<FbPost> ref = db.collection("Posts")
+    CollectionReference<FbPost> ref = DataHolder().fbadmin.getFirestoreInstance().collection("Posts")
         .withConverter(fromFirestore: FbPost.fromFirestore,
         toFirestore: (FbPost post, _) => post.toFirestore());
 
@@ -101,12 +99,6 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: Colors.blueGrey.shade50,
       appBar: CustomAppBar(
         sTitulo: 'Bienvenid@ ${userProfile?.username ?? 'Invitado'}',
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search_outlined, color: Colors.white),
-            onPressed: () {},
-          )
-        ],
       ),
       drawer: CustomDrawer(
         cColorFondo: Colors.black, // Personaliza el color de fondo del cajón
@@ -115,13 +107,12 @@ class _HomeViewState extends State<HomeView> {
         username: userProfile.username,
       ),
       body: celdasOLista(bIsList),
-      bottomNavigationBar: CustomBottomMenu(onBotonesClicked: onBottomMenuPressed),
+      bottomNavigationBar: CustomGnav(onBotonesClicked: onBottomMenuPressed),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {Navigator.of(context).pushNamed('/postcreateview');  },
+        onPressed: () =>Navigator.of(context).pushNamed('/postcreateview'),
         backgroundColor: Colors.blue[900],
         child: Icon(Icons.add, color: Colors.orangeAccent),
       ),
-
     );
   }
 
@@ -132,7 +123,8 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget? creadorDeItemLista(BuildContext context, int index) {
-    return PostCellView(sText: posts[index].title,
+    return PostCellView(
+        sText: posts[index].title,
         iPosicion: index,
         dFontSize: 20,
         iColorCode: 300,
@@ -141,7 +133,8 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget? creadorDeItemMatriz(BuildContext context, int index){
-    return PostGridCellView(sText: posts[index].title,
+    return PostGridCellView(
+        sText: posts[index].title,
         iPosicion: index,
         iColorCode: 0,
         dFontSize: 20,
@@ -168,7 +161,7 @@ class _HomeViewState extends State<HomeView> {
     }
     else {
       return GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
           itemCount: posts.length,
           itemBuilder: creadorDeItemMatriz
       );

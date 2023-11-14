@@ -1,6 +1,5 @@
 import 'package:actividad1/Singeltone/DataHolder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../FiresotreObjets/FbUsuario.dart';
@@ -24,8 +23,6 @@ class _SplashViewState extends State<SplashView>{
   void checkSession() async {
     await Future.delayed(Duration(seconds: 4));
     if (DataHolder().fbadmin.getCurrentUserID() != null) {
-
-      String uid=FirebaseAuth.instance.currentUser!.uid;
 
       DocumentReference<FbUsuario> ref=DataHolder().fbadmin.getFirestoreInstance().collection("Users")
           .doc(DataHolder().fbadmin.getCurrentUserID())
@@ -53,15 +50,15 @@ class _SplashViewState extends State<SplashView>{
   Widget build(BuildContext context) {
 
     Scaffold scaffold = Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: Center(
             child: Column(
               children: [
-                Image.asset("resources/kyty_logo_nofondo.png", width: 200,
+                Image.asset('assets/${DataHolder().platformAdmin.getPlatform()}/img/kyty_logo_nofondo.png', width: 200,
                     height: 350),
                 CircularProgressIndicator(
                   color: Colors.white,
-                  backgroundColor: Colors.cyanAccent,
+                  backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                   strokeWidth: 6.0,
                 )
               ],

@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PostGridCellView extends StatelessWidget{
-
+class PostGridCellView extends StatelessWidget {
   final String sText;
   final int iColorCode;
   final double dFontSize;
@@ -10,37 +9,42 @@ class PostGridCellView extends StatelessWidget{
   final int iPosicion;
   final Function(int indice) onItemListClickedFun;
 
-  const PostGridCellView({super.key,
+  const PostGridCellView({
+    Key? key,
     required this.sText,
     required this.iColorCode,
     required this.dFontSize,
     required this.dHeight,
     required this.iPosicion,
-    required this.onItemListClickedFun
-  });
+    required this.onItemListClickedFun,
+  }) : super(key: key);
 
-    @override
-    Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
-        child: FractionallySizedBox(
-          child: Container(
-            height: dHeight,
-            decoration: BoxDecoration(
+      onTap: () => onItemListClickedFun!(iPosicion),
+      child: FractionallySizedBox(
+        child: Container(
+          height: dHeight,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey,
+              width: 0.5
+            ),
             image: DecorationImage(
-            opacity: 0.3,
-            image: NetworkImage("https://media.tenor.com/zBc1XhcbTSoAAAAC/nyan-cat-rainbow.gif"),
-            fit: BoxFit.cover
-            )
+              opacity: 0.3,
+              image: NetworkImage("https://media.tenor.com/zBc1XhcbTSoAAAAC/nyan-cat-rainbow.gif"),
+              fit: BoxFit.cover,
+            ),
           ),
           color: Colors.amber[iColorCode],
-            child: Column(
-              children: [
-                Text(sText,style: TextStyle(fontSize: dFontSize)),
-              ],
-            )
+          child: Column(
+            children: [
+              Text(sText, style: TextStyle(fontSize: dFontSize)),
+            ],
           ),
         ),
-      onTap: () => onItemListClickedFun!(iPosicion),
+      ),
     );
   }
 }
