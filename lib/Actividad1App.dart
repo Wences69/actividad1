@@ -1,6 +1,7 @@
 import 'package:actividad1/Main/HomeView.dart';
 import 'package:actividad1/Main/PostCreateView.dart';
 import 'package:actividad1/Main/PostView.dart';
+import 'package:actividad1/OnBoarding/MovilLoginView.dart';
 import 'package:actividad1/OnBoarding/PerfilView.dart';
 import 'package:actividad1/OnBoarding/RegisterView.dart';
 import 'package:actividad1/Singeltone/DataHolder.dart';
@@ -11,6 +12,7 @@ import 'package:actividad1/Theme/WebTheme.dart';
 import 'package:flutter/material.dart';
 
 import 'OnBoarding/LoginView.dart';
+import 'OnBoarding/MovilRegisterView.dart';
 
 class Actividad1App extends StatelessWidget {
   const Actividad1App({super.key});
@@ -43,8 +45,8 @@ class Actividad1App extends StatelessWidget {
         theme: LightMode,
         darkTheme: DarkMode,
         routes: {
-          '/loginview': (context) => LoginView(),
-          '/registerview': (context) => RegisterView(),
+          '/loginview': (context) => MovilLoginView(),
+          '/registerview': (context) => MovilRegisterView(),
           '/homeview': (context) => HomeView(),
           '/splashview': (context) => SplashView(),
           '/perfilview': (context) => PerfilView(),
