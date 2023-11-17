@@ -89,7 +89,7 @@ class _MovilLoginViewState extends State<MovilLoginView> {
                 const SizedBox(height: 25),
 
                 // sign in button
-                MovilCustomButton(sText: "Login", onTap: onClickAceptar),
+                MovilCustomButton(sText: "Login", onTap: onClickLogin),
 
                 const SizedBox(height: 25),
 
@@ -102,7 +102,7 @@ class _MovilLoginViewState extends State<MovilLoginView> {
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.inversePrimary)),
                     GestureDetector(
-                      onTap: onClickRegistrar,
+                      onTap: goToRegister,
                       child: Text(
                         " Register here",
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -118,7 +118,7 @@ class _MovilLoginViewState extends State<MovilLoginView> {
     );
   }
 
-  void onClickAceptar() async {
+  void onClickLogin() async {
     String errorMessage = checkFields();
     if (errorMessage.isNotEmpty) {
       CustomSnackbar(sMensaje: errorMessage).show(context);
@@ -159,7 +159,7 @@ class _MovilLoginViewState extends State<MovilLoginView> {
     }
   }
 
-  void onClickRegistrar() {
+  void goToRegister() {
     Navigator.of(context).popAndPushNamed("/registerview");
   }
 
