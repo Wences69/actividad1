@@ -1,44 +1,33 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget{
+class CustomTextField extends StatelessWidget {
+  final String sHint;
+  final bool blIsPasswd;
+  final TextEditingController tecControler;
+  final IconButton? iconButton;
 
-  String sLabel;
-  TextEditingController tecController;
-  bool blIsPassword;
-  double dPaddingH;
-  double dPaddingV;
-  int? iMaxLenght;
-  final int? iMaxLines = null; //Siempre va a estar definido en nulo para que haga saltos de carro
-
-  CustomTextField({Key? key,
-    required this.tecController,
-    this.sLabel="",
-    this.blIsPassword=false,
-    this.dPaddingH=60,
-    this.dPaddingV=15,
-    this.iMaxLenght,
+  const CustomTextField({
+    Key? key,
+    required this.sHint,
+    required this.blIsPasswd,
+    required this.tecControler,
+    this.iconButton
   }) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: EdgeInsets.symmetric(horizontal: dPaddingH, vertical: dPaddingV),
-      child: Row(children: [
-        Flexible(
-          child: TextField(
-              controller: tecController,
-              obscureText: blIsPassword,
-              enableSuggestions: !blIsPassword,
-              autocorrect: !blIsPassword,
-              maxLength: iMaxLenght,
-              maxLines: iMaxLines,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                labelText: sLabel,
-              )),
-        ),
-      ],
+    return TextField(
+      controller: tecControler,
+      cursorColor: Theme.of(context).colorScheme.inversePrimary,
+      obscureText: blIsPasswd,
+      enableSuggestions: !blIsPasswd,
+      autocorrect: !blIsPasswd,
+      decoration: InputDecoration(
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12)
+          ),
+          hintText: sHint,
+          suffixIcon: iconButton
       ),
     );
   }

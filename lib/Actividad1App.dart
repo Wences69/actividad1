@@ -9,6 +9,7 @@ import 'package:actividad1/Splash/SplashView.dart';
 import 'package:actividad1/Theme/DarkMode.dart';
 import 'package:actividad1/Theme/LightMode.dart';
 import 'package:actividad1/Theme/WebTheme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'OnBoarding/LoginView.dart';
@@ -21,7 +22,7 @@ class Actividad1App extends StatelessWidget {
   Widget build(BuildContext context) {
     late MaterialApp materialApp;
     DataHolder().initPlatformAdmin(context);
-    if(DataHolder().platformAdmin.isWebPlatform()) {
+    if(kIsWeb) {
       materialApp = MaterialApp(
         title: 'Actividad 1 in web',
         debugShowCheckedModeBanner: false,

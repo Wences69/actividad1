@@ -1,171 +1,188 @@
-import 'package:actividad1/Custom/Views/PostGridCellView.dart';
-import 'package:actividad1/Custom/Widgets/CustomAppBar.dart';
-import 'package:actividad1/Custom/Views/PostCellView.dart';
-import 'package:actividad1/Custom/Widgets/CustomGnav.dart';
-import 'package:actividad1/FiresotreObjets/FbPost.dart';
-import 'package:actividad1/OnBoarding/LoginView.dart';
-import 'package:actividad1/Singeltone/DataHolder.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-
+import 'package:flutter/services.dart';
+import '../Custom/Views/PostCellView.dart';
+import '../Custom/Views/PostListCellView.dart';
+import '../Custom/Widgets/CustomBottomMenu.dart';
 import '../Custom/Widgets/CustomDrawer.dart';
-import '../FiresotreObjets/FbUsuario.dart';
+import '../FiresotreObjets/FbPost.dart';
+import '../OnBoarding/LoginView.dart';
+import '../Singeltone/DataHolder.dart';
 
 class HomeView extends StatefulWidget {
+  const HomeView({Key? key}) : super(key: key);
+
   @override
-  _HomeViewState createState() => _HomeViewState();
+  State<HomeView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  late FbUsuario userProfile;
   final List<FbPost> posts = [];
-  bool bIsList=true;
-
-
-  void onBottomMenuPressed(int indice) {
-    setState(() {
-      if(indice==0){
-        bIsList=true;
-      }
-      else if (indice==1){
-        bIsList=false;
-      }
-      else if (indice==2){
-        Navigator.of(context).popAndPushNamed('/homeview');
-      }
-    });
-  }
-
-  void homeViewDrawerOnTap(int indice){
-    if(indice==0){
-      Navigator.of(context).pop();
-    }
-    else if(indice==1){
-
-    }
-    else if(indice==2){
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginView()),
-          ModalRoute.withName('/loginview'));
-    }
-  }
+  late Future<List<FbPost>> futurePosts;
+  bool blIsList = true;
 
   @override
   void initState() {
     super.initState();
-    userProfile = FbUsuario(name: '', age: 0, username: '', bio: '');
-    cargarPerfil();
-    descargarPosts();
-    loadGeolocator();
-  }
-
-  void loadGeolocator() async{
-    Position ubi= await DataHolder().geolocAdmin.determinePosition();
-    print(ubi.toString());
-    DataHolder().geolocAdmin.recordLocationChanges();
-  }
-
-  void cargarPerfil() async {
-    try {
-      FirebaseFirestore db = FirebaseFirestore.instance;
-      String uid = FirebaseAuth.instance.currentUser!.uid;
-      DocumentSnapshot<Map<String, dynamic>> perfil = await db.collection(
-          "Users").doc(uid).get();
-
-      setState(() {
-        userProfile = FbUsuario.fromFirestore(perfil, null);
-      });
-    } catch (e) {}
-  }
-
-  void descargarPosts() async {
-    CollectionReference<FbPost> ref = DataHolder().fbadmin.getFirestoreInstance().collection("Posts")
-        .withConverter(fromFirestore: FbPost.fromFirestore,
-        toFirestore: (FbPost post, _) => post.toFirestore());
-
-
-    QuerySnapshot<FbPost> querySnapshot = await ref.get();
-    for (int i = 0; i < querySnapshot.docs.length; i++) {
-      setState(() {
-        posts.add(querySnapshot.docs[i].data());
-      });
-    }
+    cargarPosts();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.blueGrey.shade50,
-      appBar: CustomAppBar(
-        sTitulo: 'Bienvenid@ ${userProfile?.username ?? 'Invitado'}',
-      ),
-      drawer: CustomDrawer(
-        cColorFondo: Colors.black, // Personaliza el color de fondo del cajón
-        onItemTap: homeViewDrawerOnTap,
-        name: userProfile.name,
-        username: userProfile.username,
-      ),
-      body: celdasOLista(bIsList),
-      bottomNavigationBar: CustomGnav(onBotonesClicked: onBottomMenuPressed),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>Navigator.of(context).pushNamed('/postcreateview'),
-        backgroundColor: Colors.blue[900],
-        child: Icon(Icons.add, color: Colors.orangeAccent),
+    return RefreshIndicator(
+      onRefresh: onRefresh,
+      color: Theme.of(context).colorScheme.primary,
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBar(
+          title: Text(
+            "H O M E",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.inversePrimary,
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: listOrGrid(blIsList),
+        drawer: CustomDrawer(fOnItemTap: onDrawerPressed, fOnProfilePictureTap: onDrawerProfilePressed),
+        bottomNavigationBar: CustomBottomMenu(fOnItemTap: onBottomMenuPressed),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed("/postcreateview");
+          },
+          elevation: 0,
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).colorScheme.inversePrimary,
+          ),
+        ),
       ),
     );
   }
 
-  void onItemListClicked(int index){
-    DataHolder().selectedPost=posts[index];
-    DataHolder().saveSelectedPostInCache();
+  // Espera a cargarPosts()
+
+  Future<void> onRefresh() async {
+    await cargarPosts();
+  }
+
+  // Gestion de los botones del Drawer
+
+  void onDrawerPressed(int indice) async {
+    if (indice == 0) {
+      Navigator.pop(context);
+    } else if (indice == 1) {
+      Navigator.of(context).pushNamed("/settingsview");
+    } else if (indice == 2) {
+      DataHolder().fbadmin.cerrarSesion();
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (BuildContext context) => const LoginView()),
+        ModalRoute.withName("/loginview"),
+      );
+    }
+  }
+
+  // Gestion de el cambio de imagen de perfil
+
+  void onDrawerProfilePressed() {
+    Navigator.of(context).pushNamed("/profileimagechangeview");
+  }
+
+  // Gestion de los botones del BottomMenu
+
+  void onBottomMenuPressed(int indice) {
+    setState(() {
+      if (indice == 0) {
+        blIsList = true;
+      } else if (indice == 1) {
+        blIsList = false;
+      } else if (indice == 2) {
+        SystemNavigator.pop(); // Cerrar la aplicación
+      }
+    });
+  }
+
+  // Gestiona el click del post
+
+  void onPostPressed(int index) {
+    DataHolder().selectedPost = posts[index];
     Navigator.of(context).pushNamed("/postview");
   }
 
-  Widget? creadorDeItemLista(BuildContext context, int index) {
-    return PostCellView(
-        sText: posts[index].title,
+  // Gestiona el click mantenido del post
+
+  void onPostLongPressed(int index) {
+    DataHolder().selectedPost = posts[index];
+    Navigator.of(context).pushNamed("/posteditview");
+  }
+
+  // Creador de items en forma de celda
+
+  Widget? itemGridBuilder(BuildContext context, int index) {
+    return PostGridView(
+        sTitle: posts[index].title,
+        sBody: posts[index].body,
         iPosicion: index,
-        dFontSize: 20,
-        iColorCode: 300,
-        onItemListClickedFun: onItemListClicked
+        fOnItemTap: onPostPressed,
+        fOnItemLongPressed: onPostLongPressed
     );
   }
 
-  Widget? creadorDeItemMatriz(BuildContext context, int index){
-    return PostGridCellView(
-        sText: posts[index].title,
+  // Creador de items en forma de lista
+
+  Widget? itemListBuilder(BuildContext context, int index) {
+    return PostListView(
+        sTitle: posts[index].title,
+        sBody: posts[index].body,
         iPosicion: index,
-        iColorCode: 0,
-        dFontSize: 20,
-        dHeight: 400,
-        onItemListClickedFun: onItemListClicked
-    );
-  }
-  Widget creadorDeSeparadorLista(BuildContext context, int index) {
-    return Column(
-      children: [
-        Divider(),
-      ],
+        fOnItemTap: onPostPressed,
+        fOnItemLongPressed: onPostLongPressed
     );
   }
 
-  Widget? celdasOLista(bool isList){
-    if(isList) {
-      return ListView.separated(
-        padding: EdgeInsets.all(8),
-        itemCount: posts.length,
-        itemBuilder: creadorDeItemLista,
-        separatorBuilder: creadorDeSeparadorLista,
+  // Creador del separador de lista
+
+  Widget separadorLista(BuildContext context, int index) {
+    return Divider(
+      thickness: 2,
+      color: Theme.of(context).colorScheme.primary,
+    );
+  }
+
+  // Llena la lista de posts
+
+  Future<void> cargarPosts() async {
+    futurePosts = DataHolder().fbadmin.descargarPosts();
+    List<FbPost> listaPosts = await futurePosts;
+    setState(() {
+      posts.clear();
+      posts.addAll(listaPosts);
+    });
+
+  }
+
+  // Cambia entre ListView o GridView
+
+  Widget? listOrGrid(bool blIsList) {
+    late Widget builder;
+    if (blIsList) {
+      builder = ListView.separated(
+          padding: const EdgeInsets.all(8),
+          itemBuilder: itemListBuilder,
+          separatorBuilder: separadorLista,
+          itemCount: posts.length
       );
     }
     else {
-      return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-          itemCount: posts.length,
-          itemBuilder: creadorDeItemMatriz
+      builder = GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        itemBuilder: itemGridBuilder,
+        itemCount: posts.length,
       );
     }
+    return builder;
   }
-
 }

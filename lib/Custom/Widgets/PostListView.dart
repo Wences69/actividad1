@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class PostGridView extends StatelessWidget {
+class PostListView extends StatelessWidget {
   final String sTitle;
   final String sBody;
   final int iPosicion;
   final Function(int indice)? fOnItemTap;
   final Function(int indice)? fOnItemLongPressed;
 
-  const PostGridView({
+  const PostListView({
     Key? key,
     required this.sTitle,
     required this.sBody,
@@ -22,14 +22,13 @@ class PostGridView extends StatelessWidget {
       onTap: () => fOnItemTap!(iPosicion),
       onLongPress: () => fOnItemLongPressed!(iPosicion),
       child: Container(
-        margin: const EdgeInsets.all(8.0),
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.grey,
-            width: 1.0,
+            color: Theme.of(context).colorScheme.primary,
+            width: 2,
           ),
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,14 +36,14 @@ class PostGridView extends StatelessWidget {
             Text(
               sTitle,
               style: const TextStyle(
-                fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
             ),
-            const SizedBox(height: 8.0),
+            const SizedBox(height: 8),
             Text(
               sBody,
-              style: const TextStyle(fontSize: 16.0),
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),

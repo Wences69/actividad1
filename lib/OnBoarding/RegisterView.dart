@@ -1,97 +1,162 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../Custom/Widgets/CustomAppBar.dart';
 import '../Custom/Widgets/CustomButton.dart';
-import '../Custom/Widgets/CustomSnackBar.dart';
-import '../Custom/Widgets/CustomTextFormField.dart';
+import '../Custom/Widgets/CustomSnackbar.dart';
+import '../Custom/Widgets/CustomTextField.dart';
+import '../Singeltone/DataHolder.dart';
 
-class RegisterView extends StatelessWidget {
+class RegisterView extends StatefulWidget {
+  const RegisterView({Key? key}) : super(key: key);
 
-  late BuildContext _context;
-  TextEditingController tecUsername=TextEditingController();
-  TextEditingController tecPassword=TextEditingController();
-  TextEditingController tecRepass=TextEditingController();
+  @override
+  _RegisterViewState createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
+  final TextEditingController tecEmail = TextEditingController();
+  final TextEditingController tecPasswd = TextEditingController();
+  final TextEditingController tecConfirmPasswd = TextEditingController();
+
+  bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
-    this._context=context;
     return Scaffold(
-      backgroundColor: Colors.blueGrey.shade50,
-      appBar: CustomAppBar(sTitulo: 'Bienvendio al registro'),
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            CustomTextFormField(tecController: tecUsername, sLabel: 'Correo electrónico'),
-            CustomTextFormField(tecController: tecPassword, sLabel: 'Contraseña', blIsPassword: true),
-            CustomTextFormField(tecController: tecRepass, sLabel: 'Vuelva a escribir su contraseña', blIsPassword: true),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CustomButton(sNombre: 'Cancelar', onPressed: onClickCancelar),
-                  CustomButton(sNombre: 'Aceptar', onPressed: onClickAceptar),
-                ]
-            )
-          ]
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.person,
+                  size: 80,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+
+                const SizedBox(height: 25),
+
+                const Text(
+                  "Registro de usuario",
+                  style: TextStyle(fontSize: 20),
+                ),
+
+                const SizedBox(height: 50),
+
+                CustomTextField(
+                  sHint: "Correo electrónico",
+                  blIsPasswd: false,
+                  tecControler: tecEmail,
+                ),
+
+                const SizedBox(height: 10),
+
+                CustomTextField(
+                  sHint: "Contraseña",
+                  blIsPasswd: !isPasswordVisible,
+                  tecControler: tecPasswd,
+                  iconButton: IconButton(
+                    icon: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                CustomTextField(
+                  sHint: "Confirmar contraseña",
+                  blIsPasswd: true,
+                  tecControler: tecConfirmPasswd,
+                ),
+
+                const SizedBox(height: 25),
+
+                CustomButton(sText: "Registrate", onTap: () => registrarUsuario(tecEmail.text, tecPasswd.text)),
+
+                const SizedBox(height: 25),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "¿Ya tienes una cuenta?",
+                      style: TextStyle(
+                        color:
+                        Theme.of(context).colorScheme.inversePrimary,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: goToLogin,
+                      child: const Text(
+                        " Inicia sesión aquí",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  void onClickAceptar() async {
+  // Gestiona el texto de ¿Ya tienes una cuenta? Inicia sesión aquí
+
+  void goToLogin() {
+    Navigator.of(context).popAndPushNamed("/loginview");
+  }
+
+  // Gestiona el boton de registrarse
+
+  void registrarUsuario(String email, String password) {
     String errorMessage = checkFields();
 
     if(errorMessage.isNotEmpty){
-      CustomSnackbar(sMensaje: errorMessage).show(_context);
+      CustomSnackbar(sMensaje: errorMessage).show(context);
     }
-
     else if (errorMessage.isEmpty) {
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: tecUsername.text,
-          password: tecPassword.text,
-        );
-        Navigator.of(_context).popAndPushNamed("/perfilview");
-      }
-
-      on FirebaseAuthException catch (e) {
-
-        if (e.code == 'weak-password') {
-          CustomSnackbar(sMensaje: 'La contraseña es muy débil').show(_context);
+      Future<String?> result = DataHolder().fbadmin.registrarUsuario(tecEmail.text, tecPasswd.text);
+      result.then((mensajeError) {
+        if (mensajeError == null || mensajeError.isEmpty) {
+          Navigator.of(context).popAndPushNamed("/perfilview");
+        } else {
+          CustomSnackbar(sMensaje: mensajeError).show(context);
         }
-
-        else if (e.code == 'email-already-in-use') {
-          CustomSnackbar(sMensaje: 'Ya existe una cuenta con este correo').show(_context);
-        }
-      }
-      catch (e) {
-        print(e);
-      }
+      });
     }
   }
+
+  // Comprueba que todos los campos del register esten completos, la ultima comprobación comprueba que las contraseñas coincidan
 
   String checkFields() {
     StringBuffer errorMessage = StringBuffer();
-
-    if (tecUsername.text.isEmpty && tecPassword.text.isEmpty && tecRepass.text.isEmpty) {
+    if (tecEmail.text.isEmpty && tecPasswd.text.isEmpty && tecConfirmPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete todos los campos');
     }
-
-    else if (tecUsername.text.isEmpty) {
+    else if (tecEmail.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de correo electrónico');
     }
-
-    else if (tecPassword.text.isEmpty) {
+    else if (tecPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de contraseña');
     }
-
-    else if (tecRepass.text.isEmpty) {
+    else if (tecConfirmPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de confirmación de contraseña');
     }
-
+    else if (tecPasswd.text != tecConfirmPasswd.text) {
+      errorMessage.write('Las contraseñas no coinciden');
+    }
     return errorMessage.toString();
-  }
-
-  void onClickCancelar() {
-    Navigator.of(_context).popAndPushNamed("/loginview");
   }
 }

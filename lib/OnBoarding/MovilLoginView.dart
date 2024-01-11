@@ -1,25 +1,20 @@
-import 'package:actividad1/Custom/Widgets/MovilCustomButton.dart';
-import 'package:actividad1/Custom/Widgets/MovilCustomTextField.dart';
-import 'package:actividad1/Singeltone/DataHolder.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../Custom/Widgets/CustomSnackBar.dart';
-import '../FiresotreObjets/FbUsuario.dart';
+import '../Custom/Widgets/CustomButton.dart';
+import '../Custom/Widgets/CustomSnackbar.dart';
+import '../Custom/Widgets/CustomTextField.dart';
+import '../Singeltone/DataHolder.dart';
 
 class MovilLoginView extends StatefulWidget {
-  MovilLoginView({Key? key}) : super(key: key);
+  const MovilLoginView({Key? key}) : super(key: key);
 
   @override
-  State<MovilLoginView> createState() => _MovilLoginViewState();
+  _MovilLoginViewState createState() => _MovilLoginViewState();
 }
 
 class _MovilLoginViewState extends State<MovilLoginView> {
-  // text controllers
   final TextEditingController tecEmail = TextEditingController();
   final TextEditingController tecPasswd = TextEditingController();
 
-  // password visibility
   bool isPasswordVisible = false;
 
   @override
@@ -33,7 +28,6 @@ class _MovilLoginViewState extends State<MovilLoginView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // logo
                 Icon(
                   Icons.lock,
                   size: 80,
@@ -42,32 +36,31 @@ class _MovilLoginViewState extends State<MovilLoginView> {
 
                 const SizedBox(height: 25),
 
-                // app name
-                Text(
-                  "M I N I M A L",
+                const Text(
+                  "Inicio de sesión",
                   style: TextStyle(fontSize: 20),
                 ),
 
                 const SizedBox(height: 50),
 
-                // email textfield
-                MovilCustomTextField(
-                    sHint: "Email",
+                CustomTextField(
+                    sHint: "Correo electrónico",
                     blIsPasswd: false,
-                    tecControler: tecEmail
-                ),
+                    tecControler: tecEmail),
 
                 const SizedBox(height: 10),
 
-                // password textfield
-                MovilCustomTextField(
-                  sHint: "Password",
+                CustomTextField(
+                  sHint: "Contraseña",
                   blIsPasswd: !isPasswordVisible,
                   tecControler: tecPasswd,
                   iconButton: IconButton(
-                    icon: Icon(isPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off),
+                    icon: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                    ),
                     onPressed: () {
                       setState(() {
                         isPasswordVisible = !isPasswordVisible;
@@ -76,35 +69,26 @@ class _MovilLoginViewState extends State<MovilLoginView> {
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 25),
 
-                // forgot password
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text("Forgot password?"),
-                  ],
+                CustomButton(
+                  onTap: () => iniciarSesion(tecEmail.text, tecPasswd.text),
+                  sText: "Inicar sesión",
                 ),
 
                 const SizedBox(height: 25),
 
-                // sign in button
-                MovilCustomButton(sText: "Login", onTap: onClickLogin),
-
-                const SizedBox(height: 25),
-
-                // don't have an account? Register here
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                        "Don't have an account?",
+                        "¿No tienes cuenta?",
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.inversePrimary)),
                     GestureDetector(
                       onTap: goToRegister,
-                      child: Text(
-                        " Register here",
+                      child: const Text(
+                        " Registrate aquí",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     )
@@ -118,66 +102,46 @@ class _MovilLoginViewState extends State<MovilLoginView> {
     );
   }
 
-  void onClickLogin() async {
-    String errorMessage = checkFields();
-    if (errorMessage.isNotEmpty) {
-      CustomSnackbar(sMensaje: errorMessage).show(context);
-    }
-    else if (errorMessage.isEmpty) {
-      try {
-        await DataHolder().fbadmin.getFirebaseAuthInstance().signInWithEmailAndPassword(
-          email: tecEmail.text,
-          password: tecPasswd.text,
-        );
-
-        DocumentReference<FbUsuario> ref = DataHolder().fbadmin.getFirestoreInstance().collection("Users")
-            .doc(DataHolder().fbadmin.getCurrentUserID())
-            .withConverter(fromFirestore: FbUsuario.fromFirestore,
-          toFirestore: (FbUsuario usuario, _) => usuario.toFirestore(),);
-
-        DocumentSnapshot<FbUsuario> docSnap = await ref.get();
-        FbUsuario usuario = docSnap.data()!;
-
-        if (usuario != null) {
-          Navigator.of(context).popAndPushNamed("/homeview");
-        }
-        else {
-          Navigator.of(context).popAndPushNamed("/perfilview");
-        }
-      }
-
-      on FirebaseAuthException catch (e) {
-
-        if (e.code == 'user-not-found') {
-          CustomSnackbar(sMensaje: 'Ningún usuario encontrado para ese correo electrónico').show(context);
-        }
-
-        else if (e.code == 'wrong-password') {
-          CustomSnackbar(sMensaje: 'Contraseña incorrecta proporcionada para ese usuario').show(context);
-        }
-      }
-    }
-  }
+  // Gestiona el texto de ¿No tienes cuenta? Registrate aquí
 
   void goToRegister() {
     Navigator.of(context).popAndPushNamed("/registerview");
   }
 
+  // Gestiona el boton de inicar sesión
+
+  void iniciarSesion(String email, String password){
+    String errorMessage = checkFields();
+
+    if(errorMessage.isNotEmpty){
+      CustomSnackbar(sMensaje: errorMessage).show(context);
+    }
+    else if (errorMessage.isEmpty) {
+      Future<String?> result = DataHolder().fbadmin.iniciarSesion(tecEmail.text, tecPasswd.text);
+      result.then((mensajeError) {
+        if (mensajeError == null || mensajeError.isEmpty) {
+          Navigator.of(context).popAndPushNamed("/homeview");
+        } else {
+          CustomSnackbar(sMensaje: mensajeError).show(context);
+        }
+      }
+      );
+    }
+  }
+
+  // Comprueba que todos los campos del login esten completos
+
   String checkFields() {
     StringBuffer errorMessage = StringBuffer();
-
     if (tecEmail.text.isEmpty && tecPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete todos los campos');
     }
-
     else if (tecEmail.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de correo electrónico');
     }
-
     else if (tecPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de contraseña');
     }
-
     return errorMessage.toString();
   }
 }

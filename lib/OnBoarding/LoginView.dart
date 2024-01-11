@@ -1,103 +1,147 @@
-import 'package:actividad1/Custom/Widgets/CustomButton.dart';
-import 'package:actividad1/Singeltone/DataHolder.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../Custom/Widgets/CustomAppBar.dart';
-import '../Custom/Widgets/CustomSnackBar.dart';
-import '../Custom/Widgets/CustomTextFormField.dart';
-import '../FiresotreObjets/FbUsuario.dart';
+import '../Custom/Widgets/CustomButton.dart';
+import '../Custom/Widgets/CustomSnackbar.dart';
+import '../Custom/Widgets/CustomTextField.dart';
+import '../Singeltone/DataHolder.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
 
-  late BuildContext _context;
+  @override
+  _LoginViewState createState() => _LoginViewState();
+}
 
-  TextEditingController tecUsername = TextEditingController();
-  TextEditingController tecPassword = TextEditingController();
+class _LoginViewState extends State<LoginView> {
+  final TextEditingController tecEmail = TextEditingController();
+  final TextEditingController tecPasswd = TextEditingController();
+
+  bool isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
-    this._context = context;
     return Scaffold(
-      backgroundColor: Colors.blueGrey.shade50,
-      appBar: CustomAppBar(sTitulo: 'Bienvenido al login'),
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            CustomTextFormField(tecController: tecUsername, sLabel: 'Correo electrónico'),
-            CustomTextFormField(tecController: tecPassword, sLabel: 'Contraseña', blIsPassword: true),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  CustomButton(sNombre: 'Registrar', onPressed: onClickRegistrar),
-                  CustomButton(sNombre: 'Aceptar', onPressed: onClickAceptar),
-                ]
-            )
-          ]
+      backgroundColor: Theme.of(context).colorScheme.background,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.lock,
+                  size: 80,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+
+                const SizedBox(height: 25),
+
+                const Text(
+                  "Inicio de sesión",
+                  style: TextStyle(fontSize: 20),
+                ),
+
+                const SizedBox(height: 50),
+
+                CustomTextField(
+                    sHint: "Correo electrónico",
+                    blIsPasswd: false,
+                    tecControler: tecEmail),
+
+                const SizedBox(height: 10),
+
+                CustomTextField(
+                  sHint: "Contraseña",
+                  blIsPasswd: !isPasswordVisible,
+                  tecControler: tecPasswd,
+                  iconButton: IconButton(
+                    icon: Icon(
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Theme.of(context).colorScheme.inversePrimary,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isPasswordVisible = !isPasswordVisible;
+                      });
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 25),
+
+                CustomButton(
+                  onTap: () => iniciarSesion(tecEmail.text, tecPasswd.text),
+                  sText: "Inicar sesión",
+                ),
+
+                const SizedBox(height: 25),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                        "¿No tienes cuenta?",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.inversePrimary)),
+                    GestureDetector(
+                      onTap: goToRegister,
+                      child: const Text(
+                        " Registrate aquí",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  void onClickAceptar() async {
+  // Gestiona el texto de ¿No tienes cuenta? Registrate aquí
+
+  void goToRegister() {
+    Navigator.of(context).popAndPushNamed("/registerview");
+  }
+
+  // Gestiona el boton de inicar sesión
+
+  void iniciarSesion(String email, String password){
     String errorMessage = checkFields();
-    if (errorMessage.isNotEmpty) {
-      CustomSnackbar(sMensaje: errorMessage).show(_context);
+
+    if(errorMessage.isNotEmpty){
+      CustomSnackbar(sMensaje: errorMessage).show(context);
     }
     else if (errorMessage.isEmpty) {
-      try {
-        await DataHolder().fbadmin.getFirebaseAuthInstance().signInWithEmailAndPassword(
-          email: tecUsername.text,
-          password: tecPassword.text,
-        );
-
-        DocumentReference<FbUsuario> ref = DataHolder().fbadmin.getFirestoreInstance().collection("Users")
-            .doc(DataHolder().fbadmin.getCurrentUserID())
-            .withConverter(fromFirestore: FbUsuario.fromFirestore,
-          toFirestore: (FbUsuario usuario, _) => usuario.toFirestore(),);
-
-        DocumentSnapshot<FbUsuario> docSnap = await ref.get();
-        FbUsuario usuario = docSnap.data()!;
-
-        if (usuario != null) {
-          Navigator.of(_context).popAndPushNamed("/homeview");
-        }
-        else {
-          Navigator.of(_context).popAndPushNamed("/perfilview");
+      Future<String?> result = DataHolder().fbadmin.iniciarSesion(tecEmail.text, tecPasswd.text);
+      result.then((mensajeError) {
+        if (mensajeError == null || mensajeError.isEmpty) {
+          Navigator.of(context).popAndPushNamed("/homeview");
+        } else {
+          CustomSnackbar(sMensaje: mensajeError).show(context);
         }
       }
-
-      on FirebaseAuthException catch (e) {
-
-        if (e.code == 'user-not-found') {
-          CustomSnackbar(sMensaje: 'Ningún usuario encontrado para ese correo electrónico').show(_context);
-        }
-
-        else if (e.code == 'wrong-password') {
-          CustomSnackbar(sMensaje: 'Contraseña incorrecta proporcionada para ese usuario').show(_context);
-        }
-      }
+      );
     }
   }
 
-  void onClickRegistrar() {
-    Navigator.of(_context).popAndPushNamed("/registerview");
-  }
+  // Comprueba que todos los campos del login esten completos
 
   String checkFields() {
     StringBuffer errorMessage = StringBuffer();
-
-    if (tecUsername.text.isEmpty && tecPassword.text.isEmpty) {
+    if (tecEmail.text.isEmpty && tecPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete todos los campos');
     }
-
-    else if (tecUsername.text.isEmpty) {
+    else if (tecEmail.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de correo electrónico');
     }
-
-    else if (tecPassword.text.isEmpty) {
+    else if (tecPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de contraseña');
     }
-
     return errorMessage.toString();
   }
 }

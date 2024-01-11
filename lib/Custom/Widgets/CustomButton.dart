@@ -1,39 +1,37 @@
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
-  final String sNombre;
-  final Color cColorTexto;
-  final double dFontSize;
-  final Color cColorFondo;
-  final Function()? onPressed;
+  final String sText;
+  final void Function()? onTap;
 
-  CustomButton({Key? key,
-    required this.sNombre,
-    this.cColorTexto = Colors.white,
-    this.dFontSize = 16,
-    this.cColorFondo = Colors.blueAccent,
-    required this.onPressed,
+  const CustomButton({
+    Key? key,
+    required this.sText,
+    required this.onTap
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      child: Text(
-        sNombre,
-        style: TextStyle(
-          color: cColorTexto, // Utiliza el color de texto personalizado
-          fontSize: dFontSize,
-          fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(12)
         ),
-      ),
-      style: TextButton.styleFrom(
-        backgroundColor: Colors.blue[900], // Utiliza el color de fondo personalizado
-        padding: EdgeInsets.all(10),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+        padding: const EdgeInsets.all(25),
+        child: Center(
+          child: Text(
+            sText,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16
+            ),
+          ),
         ),
       ),
     );
   }
+
+
 }

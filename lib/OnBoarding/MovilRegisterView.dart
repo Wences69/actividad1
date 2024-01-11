@@ -1,25 +1,21 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Custom/Widgets/CustomButton.dart';
-import '../Custom/Widgets/CustomSnackBar.dart';
-import '../Custom/Widgets/MovilCustomButton.dart';
-import '../Custom/Widgets/MovilCustomTextField.dart';
+import '../Custom/Widgets/CustomSnackbar.dart';
+import '../Custom/Widgets/CustomTextField.dart';
+import '../Singeltone/DataHolder.dart';
 
 class MovilRegisterView extends StatefulWidget {
-  MovilRegisterView({Key? key});
+  const MovilRegisterView({Key? key}) : super(key: key);
 
   @override
   _MovilRegisterViewState createState() => _MovilRegisterViewState();
 }
 
 class _MovilRegisterViewState extends State<MovilRegisterView> {
-  // text controllers
-  final TextEditingController tecUsername = TextEditingController();
   final TextEditingController tecEmail = TextEditingController();
   final TextEditingController tecPasswd = TextEditingController();
   final TextEditingController tecConfirmPasswd = TextEditingController();
 
-  // password visibility
   bool isPasswordVisible = false;
 
   @override
@@ -33,7 +29,6 @@ class _MovilRegisterViewState extends State<MovilRegisterView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // logo
                 Icon(
                   Icons.person,
                   size: 80,
@@ -42,35 +37,23 @@ class _MovilRegisterViewState extends State<MovilRegisterView> {
 
                 const SizedBox(height: 25),
 
-                // app name
-                Text(
-                  "M I N I M A L",
+                const Text(
+                  "Registro de usuario",
                   style: TextStyle(fontSize: 20),
                 ),
 
                 const SizedBox(height: 50),
 
-                // username textfield
-                MovilCustomTextField(
-                  sHint: "Username",
-                  blIsPasswd: false,
-                  tecControler: tecUsername,
-                ),
-
-                const SizedBox(height: 10),
-
-                // email textfield
-                MovilCustomTextField(
-                  sHint: "Email",
+                CustomTextField(
+                  sHint: "Correo electrónico",
                   blIsPasswd: false,
                   tecControler: tecEmail,
                 ),
 
                 const SizedBox(height: 10),
 
-                // password textfield
-                MovilCustomTextField(
-                  sHint: "Password",
+                CustomTextField(
+                  sHint: "Contraseña",
                   blIsPasswd: !isPasswordVisible,
                   tecControler: tecPasswd,
                   iconButton: IconButton(
@@ -78,6 +61,7 @@ class _MovilRegisterViewState extends State<MovilRegisterView> {
                       isPasswordVisible
                           ? Icons.visibility
                           : Icons.visibility_off,
+                      color: Theme.of(context).colorScheme.inversePrimary,
                     ),
                     onPressed: () {
                       setState(() {
@@ -89,36 +73,23 @@ class _MovilRegisterViewState extends State<MovilRegisterView> {
 
                 const SizedBox(height: 10),
 
-                // confirm password textfield
-                MovilCustomTextField(
-                  sHint: "Confirm Password",
+                CustomTextField(
+                  sHint: "Confirmar contraseña",
                   blIsPasswd: true,
                   tecControler: tecConfirmPasswd,
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 25),
 
-                // forgot password
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text("Forgot password?"),
-                  ],
-                ),
+                CustomButton(sText: "Registrate", onTap: () => registrarUsuario(tecEmail.text, tecPasswd.text)),
 
                 const SizedBox(height: 25),
 
-                // register button
-                MovilCustomButton(sText: "Register", onTap: onClickRegister),
-
-                const SizedBox(height: 25),
-
-                // don't have an account? Register here
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Already have an account?",
+                      "¿Ya tienes una cuenta?",
                       style: TextStyle(
                         color:
                         Theme.of(context).colorScheme.inversePrimary,
@@ -126,8 +97,8 @@ class _MovilRegisterViewState extends State<MovilRegisterView> {
                     ),
                     GestureDetector(
                       onTap: goToLogin,
-                      child: Text(
-                        " Login here",
+                      child: const Text(
+                        " Inicia sesión aquí",
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     )
@@ -141,61 +112,51 @@ class _MovilRegisterViewState extends State<MovilRegisterView> {
     );
   }
 
-  void onClickRegister() async {
+  // Gestiona el texto de ¿Ya tienes una cuenta? Inicia sesión aquí
+
+  void goToLogin() {
+    Navigator.of(context).popAndPushNamed("/loginview");
+  }
+
+  // Gestiona el boton de registrarse
+
+  void registrarUsuario(String email, String password) {
     String errorMessage = checkFields();
 
     if(errorMessage.isNotEmpty){
       CustomSnackbar(sMensaje: errorMessage).show(context);
     }
-
     else if (errorMessage.isEmpty) {
-      try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: tecUsername.text,
-          password: tecPasswd.text,
-        );
-        Navigator.of(context).popAndPushNamed("/perfilview");
-      }
-
-      on FirebaseAuthException catch (e) {
-
-        if (e.code == 'weak-password') {
-          CustomSnackbar(sMensaje: 'La contraseña es muy débil').show(context);
+      Future<String?> result = DataHolder().fbadmin.registrarUsuario(tecEmail.text, tecPasswd.text);
+      result.then((mensajeError) {
+        if (mensajeError == null || mensajeError.isEmpty) {
+          Navigator.of(context).popAndPushNamed("/perfilview");
+        } else {
+          CustomSnackbar(sMensaje: mensajeError).show(context);
         }
-
-        else if (e.code == 'email-already-in-use') {
-          CustomSnackbar(sMensaje: 'Ya existe una cuenta con este correo').show(context);
-        }
-      }
-      catch (e) {
-        print(e);
-      }
+      });
     }
   }
+
+  // Comprueba que todos los campos del register esten completos, la ultima comprobación comprueba que las contraseñas coincidan
 
   String checkFields() {
     StringBuffer errorMessage = StringBuffer();
-
-    if (tecUsername.text.isEmpty && tecPasswd.text.isEmpty && tecConfirmPasswd.text.isEmpty) {
+    if (tecEmail.text.isEmpty && tecPasswd.text.isEmpty && tecConfirmPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete todos los campos');
     }
-
-    else if (tecUsername.text.isEmpty) {
+    else if (tecEmail.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de correo electrónico');
     }
-
     else if (tecPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de contraseña');
     }
-
     else if (tecConfirmPasswd.text.isEmpty) {
       errorMessage.write('Por favor, complete el campo de confirmación de contraseña');
     }
-
+    else if (tecPasswd.text != tecConfirmPasswd.text) {
+      errorMessage.write('Las contraseñas no coinciden');
+    }
     return errorMessage.toString();
-  }
-
-  void goToLogin() {
-    Navigator.of(context).popAndPushNamed("/loginview");
   }
 }
