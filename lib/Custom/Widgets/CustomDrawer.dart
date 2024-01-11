@@ -91,6 +91,23 @@ class CustomDrawer extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20.0),
               child: ListTile(
                 leading: Icon(
+                  Icons.search,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+                title: Text(
+                  'Buscar posts',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+                ),
+                onTap: () => fOnItemTap!(2),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: ListTile(
+                leading: Icon(
                   Icons.exit_to_app,
                   color: Theme.of(context).colorScheme.inversePrimary,
                 ),
@@ -100,7 +117,7 @@ class CustomDrawer extends StatelessWidget {
                     color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
-                onTap: () => fOnItemTap!(2),
+                onTap: () => fOnItemTap!(3),
               ),
             ),
           ],

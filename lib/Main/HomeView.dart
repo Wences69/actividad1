@@ -77,6 +77,9 @@ class _HomeViewState extends State<HomeView> {
     } else if (indice == 1) {
       Navigator.of(context).pushNamed("/settingsview");
     } else if (indice == 2) {
+
+    }
+    else if (indice == 3) {
       DataHolder().fbadmin.cerrarSesion();
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (BuildContext context) => const LoginView()),

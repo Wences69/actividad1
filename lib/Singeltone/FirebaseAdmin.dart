@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -124,8 +123,8 @@ class FirebaseAdmin {
       // Realiza la consulta para encontrar el post con el título y cuerpo específicos
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Posts')
-          .where('title', isEqualTo: DataHolder().selectedPost?.title)
-          .where('body', isEqualTo: DataHolder().selectedPost?.body)
+          .where('title', isEqualTo: DataHolder().selectedPost.title)
+          .where('body', isEqualTo: DataHolder().selectedPost.body)
           .get();
 
       // Verifica si hay al menos un documento
@@ -150,5 +149,18 @@ class FirebaseAdmin {
     } catch (error) {
       print('Error al realizar la consulta o editar el post: $error');
     }
+  }
+
+  Future<List<Map<String, dynamic>>> buscarPostPorTitulo(String searchValue) async {
+    QuerySnapshot querySnapshot = await db.collection('PostUsuario')
+        .where('Titulo', isGreaterThanOrEqualTo: searchValue)
+        .get();
+
+    return querySnapshot.docs
+        .where((doc) =>
+    (doc['Titulo'] as String).contains(searchValue) ||
+        (doc['Usuario'] as String).contains(searchValue))
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
   }
 }
