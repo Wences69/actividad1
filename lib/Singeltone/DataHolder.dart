@@ -1,3 +1,4 @@
+import 'package:actividad1/Singeltone/HttpAdmin.dart';
 import 'package:flutter/material.dart';
 
 import '../FiresotreObjets/FbPost.dart';
@@ -12,6 +13,7 @@ class DataHolder {
 
   late FbPost selectedPost;
   late PlatformAdmin platformAdmin;
+  HttpAdmin httAdmin = HttpAdmin();
 
   void initDataHolder() {}
 
