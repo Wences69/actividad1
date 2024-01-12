@@ -51,7 +51,7 @@ class _SplashViewState extends State<SplashView>{
                 Image.asset('assets/${DataHolder().platformAdmin.getPlatform()}/img/kyty_logo_nofondo.png', width: 200,
                     height: 350),
                 CircularProgressIndicator(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.primary,
                   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
                   strokeWidth: 6.0,
                 )

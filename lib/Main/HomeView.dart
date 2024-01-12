@@ -95,6 +95,8 @@ class _HomeViewState extends State<HomeView> {
     } else if (indice == 3) {
       getTemperatura();
     } else if (indice == 4) {
+      Navigator.of(context).popAndPushNamed("/mapview");
+    } else if (indice == 5) {
       DataHolder().fbadmin.cerrarSesion();
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (BuildContext context) => const LoginView()),

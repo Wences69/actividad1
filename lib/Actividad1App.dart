@@ -1,4 +1,5 @@
 import 'package:actividad1/Main/HomeView.dart';
+import 'package:actividad1/Main/MapView.dart';
 import 'package:actividad1/Main/PostCreateView.dart';
 import 'package:actividad1/Main/PostView.dart';
 import 'package:actividad1/OnBoarding/MovilLoginView.dart';
@@ -35,6 +36,7 @@ class Actividad1App extends StatelessWidget {
           '/perfilview': (context) => PerfilView(),
           '/postview': (context) => PostView(),
           '/postcreateview': (context) => PostCreateView(),
+          '/mapview': (context) => MapView(),
         },
         initialRoute: '/splashview',
       );
@@ -53,6 +55,7 @@ class Actividad1App extends StatelessWidget {
           '/perfilview': (context) => PerfilView(),
           '/postview': (context) => PostView(),
           '/postcreateview': (context) => PostCreateView(),
+          '/mapview': (context) => MapView(),
         },
         initialRoute: '/splashview',
       );
