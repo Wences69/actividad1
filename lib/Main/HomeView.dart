@@ -1,6 +1,7 @@
 import 'package:actividad1/Custom/Widgets/CustomDialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import '../Custom/Views/PostCellView.dart';
 import '../Custom/Views/PostListCellView.dart';
 import '../Custom/Widgets/CustomBottomMenu.dart';
@@ -25,7 +26,13 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     cargarPosts();
-    DataHolder().httAdmin.getTemperatura(40.4771398926367, -3.373063830059974);
+    getLocalTemp();
+  }
+
+  void getLocalTemp() async {
+    Position position = await DataHolder().geolocAdmin.determinePosition();
+    double valor= await DataHolder().httAdmin.getTemperatura(position.latitude, position.longitude);
+    print("LA TEMPERATURA EN EL SITIO EN EL QUE ESTAS ES ${valor}");
   }
 
   @override
