@@ -23,6 +23,18 @@ class HttpAdmin {
       print('Request failed with status: ${response.statusCode}.');
       return 0;
     }
+  }
 
+  Future<String> chisteRandomChuckNorris() async {
+    var url = Uri.https('api.chucknorris.io', '/jokes/random');
+
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
+      return jsonResponse['value'];
+    } else {
+      throw Exception('Error al obtener la broma de Chuck Norris');
+    }
   }
 }

@@ -97,6 +97,31 @@ class _HomeViewState extends State<HomeView> {
     } else if (indice == 4) {
       Navigator.of(context).popAndPushNamed("/mapview");
     } else if (indice == 5) {
+      String chuckNorrisJoke = await DataHolder().httpAdmin.chisteRandomChuckNorris();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Información'),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Broma de Chuck Norris: $chuckNorrisJoke'),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: Text('Jajajajajajajajajajajaja'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else if (indice == 6) {
       DataHolder().fbadmin.cerrarSesion();
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (BuildContext context) => const LoginView()),
@@ -316,6 +341,6 @@ class _HomeViewState extends State<HomeView> {
 
   Future<void> determinarTemperaturaActual() async {
     await determinarPosicionActual();
-    temperatura = await DataHolder().httAdmin.getTemByGeoloc(position.latitude, position.longitude);
+    temperatura = await DataHolder().httpAdmin.getTemByGeoloc(position.latitude, position.longitude);
   }
 }

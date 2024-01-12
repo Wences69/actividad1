@@ -142,6 +142,23 @@ class CustomDrawer extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20.0),
               child: ListTile(
                 leading: Icon(
+                  Icons.abc,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+                title: Text(
+                  'Chiste random by Chuck Norris',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+                ),
+                onTap: () => fOnItemTap!(5),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: ListTile(
+                leading: Icon(
                   Icons.exit_to_app,
                   color: Theme.of(context).colorScheme.inversePrimary,
                 ),
@@ -151,7 +168,7 @@ class CustomDrawer extends StatelessWidget {
                     color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
-                onTap: () => fOnItemTap!(5),
+                onTap: () => fOnItemTap!(6),
               ),
             ),
           ],

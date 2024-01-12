@@ -20,7 +20,7 @@ class DataHolder {
 
   FirebaseAdmin fbadmin=FirebaseAdmin();
   GeolocAdmin geolocAdmin = GeolocAdmin();
-  HttpAdmin httAdmin = HttpAdmin();
+  HttpAdmin httpAdmin = HttpAdmin();
 
   void initDataHolder() {}
 
