@@ -67,13 +67,14 @@ class MapViewState extends State<MapView> {
       FbUsuario temp = usuariosDescargados.docChanges[i].doc.data()!;
       tablaUsuarios[usuariosDescargados.docChanges[i].doc.id] = temp;
 
-      if (_ubicacionActual != null) {
-          Marker marcadorTemp = Marker(
+      if (_ubicacionActual != null &&
+          estaEnRadio(temp.geoloc.latitude, temp.geoloc.longitude, 5)) {
+        Marker marcadorTemp = Marker(
           markerId: MarkerId(usuariosDescargados.docChanges[i].doc.id),
           position: LatLng(temp.geoloc.latitude, temp.geoloc.longitude),
           infoWindow: InfoWindow(
-            title: temp.name,
-            snippet: '@${temp.username}'
+              title: temp.name,
+              snippet: "@${temp.username}"
           ),
         );
         marcTemp.add(marcadorTemp);
@@ -85,6 +86,23 @@ class MapViewState extends State<MapView> {
         marcadores.addAll(marcTemp);
       });
     }
+  }
+
+  bool estaEnRadio(double latitud, double longitud, double radio) {
+    if (_ubicacionActual == null) {
+      return false;
+    }
+
+    double distancia = Geolocator.distanceBetween(
+      _ubicacionActual!.latitude,
+      _ubicacionActual!.longitude,
+      latitud,
+      longitud,
+    );
+
+    double distanciaEnKilometros = distancia / 1000;
+
+    return distanciaEnKilometros <= radio;
   }
 
   void descargaUsuariosError(error) {
