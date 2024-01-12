@@ -1,3 +1,4 @@
+import 'package:actividad1/Singeltone/FirebaseAdmin.dart';
 import 'package:flutter/material.dart';
 import '../Custom/Widgets/CustomButton.dart';
 import '../Custom/Widgets/CustomSnackbar.dart';
@@ -110,7 +111,7 @@ class _MovilLoginViewState extends State<MovilLoginView> {
 
   // Gestiona el boton de inicar sesión
 
-  void iniciarSesion(String email, String password){
+  void iniciarSesion(String email, String password) {
     String errorMessage = checkFields();
 
     if(errorMessage.isNotEmpty){
@@ -118,8 +119,9 @@ class _MovilLoginViewState extends State<MovilLoginView> {
     }
     else if (errorMessage.isEmpty) {
       Future<String?> result = DataHolder().fbadmin.iniciarSesion(tecEmail.text, tecPasswd.text);
-      result.then((mensajeError) {
+      result.then((mensajeError) async {
         if (mensajeError == null || mensajeError.isEmpty) {
+          DataHolder().usuario = await DataHolder().loadFbUsuario();
           Navigator.of(context).popAndPushNamed("/homeview");
         } else {
           CustomSnackbar(sMensaje: mensajeError).show(context);

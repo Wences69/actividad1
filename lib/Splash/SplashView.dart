@@ -23,14 +23,8 @@ class _SplashViewState extends State<SplashView>{
   void checkSession() async {
     await Future.delayed(Duration(seconds: 4));
     if (DataHolder().fbadmin.getCurrentUserID() != null) {
-
-      DocumentReference<FbUsuario> ref=DataHolder().fbadmin.getFirestoreInstance().collection("Users")
-          .doc(DataHolder().fbadmin.getCurrentUserID())
-          .withConverter(fromFirestore: FbUsuario.fromFirestore,
-        toFirestore: (FbUsuario usuario, _) => usuario.toFirestore(),);
-
-      DocumentSnapshot<FbUsuario> docSnap=await ref.get();
-      FbUsuario usuario=docSnap.data()!;
+      FbUsuario? usuario=await DataHolder().loadFbUsuario();
+      DataHolder().usuario = usuario;
 
       if (usuario!=null) {
         Navigator.of(context).popAndPushNamed("/homeview");

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../Custom/Widgets/CustomButton.dart';
 import '../Custom/Widgets/CustomSnackbar.dart';
@@ -98,8 +99,15 @@ class _PerfilViewState extends State<PerfilView> {
       CustomSnackbar(sMensaje: errorMessage).show(context);
     }
     else if (errorMessage.isEmpty) {
-      FbUsuario user = FbUsuario(name: tecName.text, age: int.parse(tecAge.text), username: tecUsername.text, bio: tecBio.text);
+      FbUsuario user = FbUsuario(
+          name: tecName.text,
+          age: int.parse(tecAge.text),
+          username: tecUsername.text,
+          bio: tecBio.text,
+          geoloc: GeoPoint(0, 0)
+      );
       await DataHolder().fbadmin.getFirestoreInstance().collection("Users").doc(DataHolder().fbadmin.getCurrentUserID()).set(user.toFirestore());
+      DataHolder().usuario = await DataHolder().loadFbUsuario();
       Navigator.of(context).popAndPushNamed("/homeview");
     }
   }
@@ -129,7 +137,6 @@ class _PerfilViewState extends State<PerfilView> {
     return errorMessage.toString();
   }
 }
-
 
 
 

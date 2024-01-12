@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../FiresotreObjets/FbPost.dart';
+import '../FiresotreObjets/FbUsuario.dart';
 import 'DataHolder.dart';
 
 class FirebaseAdmin {
@@ -163,5 +164,10 @@ class FirebaseAdmin {
         (doc['body'] as String).contains(searchValue))
         .map((doc) => doc.data() as Map<String, dynamic>)
         .toList();
+  }
+
+  void actualizarPerfilUsuario(FbUsuario usuario) async{
+    String uidUsuario = FirebaseAuth.instance.currentUser!.uid;
+    await db.collection("Users").doc(uidUsuario).set(usuario.toFirestore());
   }
 }

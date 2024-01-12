@@ -42,18 +42,18 @@ class GeolocAdmin{
 
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
-    return await Geolocator.getCurrentPosition();
+    Position localizacion = await Geolocator.getCurrentPosition();
+    print("------------>>>>>>>>>>>>>>>>>>>>>"+localizacion.toString());
+    return localizacion;
   }
 
-  void recordLocationChanges(){
+  void recordLocationChanges(Function(Position? position) funCambioPos){
     final LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
       distanceFilter: 0,
     );
-    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-            (Position? position) {
-          print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
-        });
+    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen(funCambioPos);
   }
 
 }

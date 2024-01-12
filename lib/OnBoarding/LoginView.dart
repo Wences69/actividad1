@@ -118,8 +118,9 @@ class _LoginViewState extends State<LoginView> {
     }
     else if (errorMessage.isEmpty) {
       Future<String?> result = DataHolder().fbadmin.iniciarSesion(tecEmail.text, tecPasswd.text);
-      result.then((mensajeError) {
+      result.then((mensajeError) async {
         if (mensajeError == null || mensajeError.isEmpty) {
+          DataHolder().usuario = await DataHolder().loadFbUsuario();
           Navigator.of(context).popAndPushNamed("/homeview");
         } else {
           CustomSnackbar(sMensaje: mensajeError).show(context);

@@ -20,6 +20,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final List<FbPost> posts = [];
   late Future<List<FbPost>> futurePosts;
+  late Position position;
   bool blIsList = true;
 
   @override
@@ -27,12 +28,11 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     cargarPosts();
     getLocalTemp();
+    DataHolder().GPSSuscribeUser();
   }
 
   void getLocalTemp() async {
-    Position position = await DataHolder().geolocAdmin.determinePosition();
-    double valor= await DataHolder().httAdmin.getTemperatura(position.latitude, position.longitude);
-    print("LA TEMPERATURA EN EL SITIO EN EL QUE ESTAS ES ${valor}");
+    position = await DataHolder().geolocAdmin.determinePosition();
   }
 
   @override
