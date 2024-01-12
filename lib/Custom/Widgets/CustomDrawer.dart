@@ -108,6 +108,23 @@ class CustomDrawer extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20.0),
               child: ListTile(
                 leading: Icon(
+                  Icons.sunny,
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                ),
+                title: Text(
+                  'El tiempo',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                  ),
+                ),
+                onTap: () => fOnItemTap!(3),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 20.0),
+              child: ListTile(
+                leading: Icon(
                   Icons.exit_to_app,
                   color: Theme.of(context).colorScheme.inversePrimary,
                 ),
@@ -117,7 +134,7 @@ class CustomDrawer extends StatelessWidget {
                     color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
-                onTap: () => fOnItemTap!(3),
+                onTap: () => fOnItemTap!(4),
               ),
             ),
           ],

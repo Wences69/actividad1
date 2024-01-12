@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 
 class GeolocAdmin{
-
-
   /// Determine the current position of the device.
   ///
   /// When the location services are not enabled or permissions

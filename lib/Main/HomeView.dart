@@ -23,6 +23,7 @@ class _HomeViewState extends State<HomeView> {
   final List<FbPost> posts = [];
   late Future<List<FbPost>> futurePosts;
   late Position position;
+  late double temperatura;
   bool blIsList = true;
   List<FbPost> searchResults = [];
 
@@ -30,6 +31,12 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     super.initState();
     cargarPosts();
+    initData();
+  }
+
+  Future<void> initData() async {
+    await determinarPosicionActual();
+    await determinarTemperaturaActual();
     DataHolder().GPSSuscribeUser();
   }
 
@@ -85,8 +92,9 @@ class _HomeViewState extends State<HomeView> {
       Navigator.of(context).pushNamed("/settingsview");
     } else if (indice == 2) {
       mostrarCuadroDialogoBusqueda();
-    }
-    else if (indice == 3) {
+    } else if (indice == 3) {
+      getTemperatura();
+    } else if (indice == 4) {
       DataHolder().fbadmin.cerrarSesion();
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (BuildContext context) => const LoginView()),
@@ -214,7 +222,7 @@ class _HomeViewState extends State<HomeView> {
   Widget separadorLista(BuildContext context, int index) {
     return Divider(
       thickness: 2,
-      color: Theme.of(context).colorScheme.primary,
+      color: Theme.of(context).colorScheme.primary
     );
   }
 
@@ -227,7 +235,6 @@ class _HomeViewState extends State<HomeView> {
       posts.clear();
       posts.addAll(listaPosts);
     });
-
   }
 
   // Cambia entre ListView o GridView
@@ -250,5 +257,63 @@ class _HomeViewState extends State<HomeView> {
       );
     }
     return builder;
+  }
+
+  Future<void> getTemperatura() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Temperatura actual"),
+          content: Container(
+            height: 80.0, // Ajusta la altura según tus necesidades
+            child: const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Cargando..."),
+                SizedBox(height: 10.0),
+                CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    try {
+      await determinarTemperaturaActual();
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("TEMPERATURA ACTUAL"),
+            content: Text("La temperatura en su ubicacion actual es de $temperatura ºC"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Volver"),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (error) {
+      print("Error al obtener la temperatura: $error");
+      Navigator.of(context).pop();
+    }
+  }
+  Future<void> determinarPosicionActual() async {
+    final positionTemp = await DataHolder().geolocAdmin.determinePosition();
+    setState(() {
+      position = positionTemp;
+    });
+  }
+
+  Future<void> determinarTemperaturaActual() async {
+    await determinarPosicionActual();
+    temperatura = await DataHolder().httAdmin.getTemByGeoloc(position.latitude, position.longitude);
   }
 }

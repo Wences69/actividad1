@@ -21,10 +21,6 @@ class _SearchPostsViewState extends State<SearchPostsView> {
   bool blIsList = true;
   late CustomBottomMenu bottomMenu;
 
-  Widget creadorDeSeparadorLista(BuildContext context, int index) {
-    return const Divider(color: Color.fromRGBO(37, 77, 152, 1.0), thickness: 2,);
-  }
-
   @override
   void initState() {
     descargarPosts();
@@ -82,7 +78,6 @@ class _SearchPostsViewState extends State<SearchPostsView> {
     return builder;
   }
 
-
   Widget? itemGridBuilder(BuildContext context, int index) {
     return PostGridView(
         sTitle: posts[index].title,
@@ -103,7 +98,6 @@ class _SearchPostsViewState extends State<SearchPostsView> {
     );
   }
 
-
   Widget separadorLista(BuildContext context, int index) {
     return Divider(
       thickness: 2,
@@ -121,7 +115,6 @@ class _SearchPostsViewState extends State<SearchPostsView> {
       print("Error al descargar posts: $e");
     }
   }
-
 
   void onBottomMenuPressed(int indice) {
     setState(() {
