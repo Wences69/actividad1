@@ -23,7 +23,7 @@ class _SplashViewState extends State<SplashView>{
   void checkSession() async {
     await Future.delayed(Duration(seconds: 4));
     if (DataHolder().fbadmin.getCurrentUserID() != null) {
-      FbUsuario? usuario=await DataHolder().loadFbUsuario();
+      FbUsuario? usuario = await DataHolder().loadFbUsuario();
       DataHolder().usuario = usuario;
 
       if (usuario!=null) {

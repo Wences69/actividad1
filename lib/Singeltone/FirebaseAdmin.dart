@@ -152,18 +152,23 @@ class FirebaseAdmin {
     }
   }
 
-  Future<List<Map<String, dynamic>>> buscarPostPorTitulo(String searchValue) async {
-    QuerySnapshot querySnapshot = await db
-        .collection('Posts')
-        .where('title', isGreaterThanOrEqualTo: searchValue)
-        .get();
+  Future<List<FbPost>> buscarPostPorTitulo(String postBuscar) async {
+    try {
+      final querySnapshot = await db.collection("Posts")
+          .where('title', isEqualTo: postBuscar).get();
 
-    return querySnapshot.docs
-        .where((doc) =>
-        (doc['title'] as String).contains(searchValue) ||
-        (doc['body'] as String).contains(searchValue))
-        .map((doc) => doc.data() as Map<String, dynamic>)
-        .toList();
+      List<FbPost> posts = [];
+
+      for (var doc in querySnapshot.docs) {
+        var post = FbPost.fromFirestore(doc, null);
+        posts.add(post);
+      }
+
+      return posts;
+    } catch (e) {
+      print("Error al buscar posts: $e");
+      return [];
+    }
   }
 
   void actualizarPerfilUsuario(FbUsuario usuario) async{

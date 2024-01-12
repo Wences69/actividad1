@@ -1,3 +1,4 @@
+import 'package:actividad1/FiresotreObjets/FbPost.dart';
 import 'package:flutter/material.dart';
 import '../../Singeltone/DataHolder.dart';
 
@@ -22,14 +23,13 @@ class CustomDialogs {
                   ),
                 ),
                 SizedBox(height: 16),
-                ElevatedButton(
+                /*ElevatedButton(
                   onPressed: () async {
                     String searchValue = _searchController.text.trim();
                     if (searchValue.isNotEmpty) {
                       Navigator.of(context).pop();
 
-                      List<Map<String, dynamic>> searchResults =
-                      await DataHolder().fbadmin.buscarPostPorTitulo(searchValue);
+                      Future<List<FbPost>> searchResults =;
 
                       if (searchResults.isNotEmpty) {
                         showResultsDialog(context, searchResults);
@@ -43,7 +43,7 @@ class CustomDialogs {
                     //onPrimary: Theme.of(context).colorScheme.onPrimary,
                   ),
                   child: Text("Buscar"),
-                )
+                )*/
               ],
             ),
           ),
@@ -116,4 +116,3 @@ class CustomDialogs {
     );
   }
 }
-

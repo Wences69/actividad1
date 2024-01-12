@@ -26,7 +26,7 @@ class FbUsuario {
       age: data?['age'] != null ? data!['age'] : 0,
       username: data?['username'] != null ? data!['username'] : "Anónimo",
       bio: data?['bio'] != null ? data!['bio'] : "",
-      geoloc: data?['geoloc'] != null ? data!['geoloc'] : const GeoPoint(0, 0),
+      geoloc: data?['geoloc'] != null ? data!['geoloc'] : GeoPoint(0, 0),
     );
 
   }

@@ -1,4 +1,4 @@
-import 'package:actividad1/Custom/Widgets/CustomDialogs.dart';
+import 'package:actividad1/Custom/Widgets/CustomSnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,6 +9,7 @@ import '../Custom/Widgets/CustomDrawer.dart';
 import '../FiresotreObjets/FbPost.dart';
 import '../OnBoarding/LoginView.dart';
 import '../Singeltone/DataHolder.dart';
+import 'SearchPostsView.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -18,21 +19,18 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final TextEditingController _searchController = TextEditingController();
   final List<FbPost> posts = [];
   late Future<List<FbPost>> futurePosts;
   late Position position;
   bool blIsList = true;
+  List<FbPost> searchResults = [];
 
   @override
   void initState() {
     super.initState();
     cargarPosts();
-    getLocalTemp();
     DataHolder().GPSSuscribeUser();
-  }
-
-  void getLocalTemp() async {
-    position = await DataHolder().geolocAdmin.determinePosition();
   }
 
   @override
@@ -86,8 +84,7 @@ class _HomeViewState extends State<HomeView> {
     } else if (indice == 1) {
       Navigator.of(context).pushNamed("/settingsview");
     } else if (indice == 2) {
-      TextEditingController _searchController = TextEditingController();
-      CustomDialogs.showSearchDialog(context, _searchController);
+      mostrarCuadroDialogoBusqueda();
     }
     else if (indice == 3) {
       DataHolder().fbadmin.cerrarSesion();
@@ -98,6 +95,61 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
+  void mostrarCuadroDialogoBusqueda() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Buscar Posts"),
+          content: TextField(
+            controller: _searchController,
+            decoration: const InputDecoration(hintText: "Escribe algo aquí..."),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (await buscarPosts()) {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SearchPostsView(searchResults: searchResults),
+                    ),
+                  );
+
+                }
+              },
+              child: const Text("Buscar"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<bool> buscarPosts() async {
+    String postBuscar = _searchController.text;
+    List<FbPost> results = await DataHolder().fbadmin.buscarPostPorTitulo(postBuscar);
+    if (postBuscar.isNotEmpty) {
+      if (results.isEmpty) {
+        const CustomSnackbar(sMensaje: "No se encontraron resultados").show(context);
+        return false;
+      } else {
+        setState(() {
+          searchResults = results;
+        });
+        return true;
+      }
+    } else {
+      const CustomSnackbar(sMensaje: "Por favor, escriba algo").show(context);
+      return false;
+    }
+  }
 
   // Gestion de el cambio de imagen de perfil
 
