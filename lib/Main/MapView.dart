@@ -67,8 +67,7 @@ class MapViewState extends State<MapView> {
       FbUsuario temp = usuariosDescargados.docChanges[i].doc.data()!;
       tablaUsuarios[usuariosDescargados.docChanges[i].doc.id] = temp;
 
-      if (_ubicacionActual != null &&
-          estaEnRadio(temp.geoloc.latitude, temp.geoloc.longitude, 5)) {
+      if (_ubicacionActual != null && estaEnRadio(temp.geoloc.latitude, temp.geoloc.longitude, 5)) {
         Marker marcadorTemp = Marker(
           markerId: MarkerId(usuariosDescargados.docChanges[i].doc.id),
           position: LatLng(temp.geoloc.latitude, temp.geoloc.longitude),

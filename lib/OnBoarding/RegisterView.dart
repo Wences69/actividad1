@@ -120,7 +120,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   // Gestiona el boton de registrarse
 
-  void registrarUsuario(String email, String password) {
+  Future<void> registrarUsuario(String email, String password) async {
     String errorMessage = checkFields();
 
     if(errorMessage.isNotEmpty){
@@ -128,6 +128,7 @@ class _RegisterViewState extends State<RegisterView> {
     }
     else if (errorMessage.isEmpty) {
       Future<String?> result = DataHolder().fbadmin.registrarUsuario(tecEmail.text, tecPasswd.text);
+      DataHolder().usuario = await DataHolder().loadFbUsuario();
       result.then((mensajeError) {
         if (mensajeError == null || mensajeError.isEmpty) {
           Navigator.of(context).popAndPushNamed("/perfilview");
