@@ -36,7 +36,6 @@ class DataHolder {
 
   void GPSSuscribeUser(){
     geolocAdmin.recordLocationChanges(posicionDelMovilCambio);
-
   }
 
   void posicionDelMovilCambio(Position? position) {
@@ -49,7 +48,7 @@ class DataHolder {
     }
   }
 
-  Future<FbUsuario?> loadFbUsuario() async{
+  Future<FbUsuario?> loadFbUsuario() async {
     String uid=FirebaseAuth.instance.currentUser!.uid;
     print("UID DE DESCARGA loadFbUsuario------------->>>> ${uid}");
     DocumentReference<FbUsuario> ref=DataHolder().fbadmin.db.collection("Users")

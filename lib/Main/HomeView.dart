@@ -78,7 +78,6 @@ class _HomeViewState extends State<HomeView> {
   }
 
   // Espera a cargarPosts()
-
   Future<void> onRefresh() async {
     await cargarPosts();
   }
@@ -207,14 +206,12 @@ class _HomeViewState extends State<HomeView> {
   }
 
   // Gestiona el click del post
-
   void onPostPressed(int index) {
     DataHolder().selectedPost = posts[index];
     Navigator.of(context).pushNamed("/postview");
   }
 
   // Gestiona el click mantenido del post
-
   void onPostLongPressed(int index) {
     DataHolder().selectedPost = posts[index];
     Navigator.of(context).pushNamed("/posteditview");
@@ -265,7 +262,6 @@ class _HomeViewState extends State<HomeView> {
   }
 
   // Cambia entre ListView o GridView
-
   Widget? listOrGrid(bool blIsList) {
     late Widget builder;
     if (blIsList) {

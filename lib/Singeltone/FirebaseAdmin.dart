@@ -9,7 +9,6 @@ class FirebaseAdmin {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   // Devuelve el ID del usuario logeado
-
   String? getCurrentUserID(){
     return FirebaseAuth.instance.currentUser?.uid;
   }
